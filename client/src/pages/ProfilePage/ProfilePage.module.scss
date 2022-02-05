@@ -1,0 +1,297 @@
+@media all and (max-width: 1650px){
+  span, button, input {
+    font-size: 14px !important;
+  }
+}
+
+@media all and (max-width: 800px){
+  .inputAndButtonsTrack {
+    flex-wrap: wrap;
+  }
+}
+
+@media all and (max-width: 420px){
+  span, button, input {
+    font-size: 10px !important;
+  }
+
+  .pseudonymWrapper {
+    h5 {
+      font-size: 70px !important;
+    }
+  }
+}
+
+@media all and (max-width: 300px){
+  .pseudonymWrapper {
+    h5 {
+      font-size: 55px !important;
+    }
+  }
+}
+
+input {
+  padding-left: 5%;
+  width: 100%;
+  height: 50px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+
+  font-size: 25px;
+
+  color: rgba(0, 0, 0, 0.5);
+}
+
+
+.pageWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+
+  .contentWrapper {
+    margin-top: 5.5rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    width: 90%;
+
+    padding: 3% 0 5% 0;
+
+    background: #222222;
+
+
+
+    .applicationSendWrapper button, .uploadBtn, .chooseFileBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3% 8% 3% 8%;
+        background: #28B85C;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        font-size: 24px;
+        font-weight: bold;
+
+        color: #FFFFFF;
+      }
+
+
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .userInformationWrapper {
+      width: 82%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+       span {
+         margin-top: 1rem;
+       }
+    }
+
+
+    .applicationSendWrapper {
+      width: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+
+      margin-top: 5rem;
+      padding-bottom: 2rem;
+
+      hr {
+        width: 90%;
+        margin: .725rem 0 2rem 0;
+      }
+
+      form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        row-gap: 2rem;
+      }
+    }
+
+  }
+
+  overflow: scroll;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #C4C4C4;
+  }
+}
+
+
+.singerInfoWrapper {
+    width: 100%;
+
+    .singerHeaderWrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      column-gap: 5%;
+      width: 100%;
+      height: 448px;
+      border-bottom: 3px solid #FFFFFF;
+
+      background: linear-gradient(360deg, #C013DC -193.49%, rgba(192, 19, 220, 0) 48.03%);
+
+
+      span {
+        font-size: 24px;
+        color: #4B4B4B;
+      }
+
+      .pseudonymWrapper{
+        h5 {
+          font-size: 100px;
+        }
+      }
+
+      .singerInfo {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+
+  .singerBodyWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    padding: 5% 5% 0 5%;
+
+    .modalBtn {
+      width: 100%;
+      padding-left: 3%;
+
+      button {
+        max-width: 200px;
+        max-height: 75px;
+      }
+    }
+
+    .singerAlbumsWrapper, .singerTracksWrapper {
+      margin-top: 2rem;
+      width: 100%;
+
+      .albumsText, .tracksText {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        padding-left: 3%;
+        margin: 2rem 0 2rem 0;
+      }
+      .AlbumsWrapper, .TracksWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        column-gap: 10%;
+        row-gap: 50px;
+        span {
+          padding: 10% 0 10% 0;
+        }
+      }
+    }
+  }
+}
+
+.uploadAlbum {
+  padding: 5% 0 5% 0;
+  margin: 0 5% 5% 5%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  row-gap: 2rem;
+  border: 1px solid #FFFFFF;
+
+  label {
+    display: block;
+    padding: 5% 0 5% 0;
+    font-size: 24px;
+  }
+
+  .uploadText {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+
+  .inputBlockAlbumTrack, .inputBlockAlbum, .chooseFileBtn {
+    margin-left: 25%;
+  }
+
+  .inputBlockAlbum {
+    width: 50%;
+  }
+
+  select {
+    margin-left: 25%;
+  }
+
+
+  .inputBlockAlbumTrack {
+    width: 67%;
+    input {
+      width: 85%;
+    }
+    .inputAndButtonsTrack {
+      display: flex;
+      margin: 2rem 0 2rem 0;
+      column-gap: 4%;
+    }
+  }
+
+
+  .plusBtn {
+    background: #28B85C;
+  }
+
+  .minusBtn {
+    background: #FF6B7F;
+  }
+
+  .plusBtn, .minusBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}

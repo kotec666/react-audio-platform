@@ -5,7 +5,7 @@ import React from 'react'
 
 
 export const AppRouter = () => {
-    const isAuth = false
+    const isAuth = true
 
     return (
         <Routes>

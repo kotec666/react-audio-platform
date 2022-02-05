@@ -1,0 +1,129 @@
+.pageWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  .contentWrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+  }
+
+  overflow: scroll;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #C4C4C4;
+  }
+}
+
+.search {
+
+  width: 35%;
+  margin-bottom: 4rem;
+
+  input {
+    width: 100%;
+    height: 50px;
+    padding-left: 2%;
+
+    font-size: 25px;
+
+    color: rgba(0, 0, 0, 0.5);
+
+    background: #FFFFFF;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+  }
+}
+
+.searchResults {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+    .helpText {
+      width: 100%;
+      padding-left: 9%;
+      padding-bottom: 2%;
+    }
+}
+
+.albumResult, .trackResult, .singerResult, .genreResult {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.resultsWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  column-gap: 10%;
+  row-gap: 50px;
+
+  span {
+    padding: 10% 0 10% 0;
+  }
+}
+
+.genreWrapper {
+  background: linear-gradient(360deg, #0029FF -100%, rgba(192, 19, 220, 0) 48.03%);
+}
+
+.albumWrapper {
+  background: linear-gradient(360deg, #C013DC -100%, rgba(192, 19, 220, 0) 48.03%);
+}
+
+.trackWrapper {
+  background: linear-gradient(360deg, #28B85C -100%, rgba(192, 19, 220, 0) 48.03%);
+}
+
+.singerWrapper {
+  background: linear-gradient(360deg, #666666 -100%, rgba(192, 19, 220, 0) 48.03%);
+}
+
+.albumWrapper, .trackWrapper, .singerWrapper, .genreWrapper {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+
+  width: 192px;
+  height: 192px;
+
+
+  border: 1px solid #C4C4C4;
+
+  .imgWrapper {
+    width: 106px;
+    height: 106px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+
+}
+
+
+span {
+  font-size: 24px;
+}

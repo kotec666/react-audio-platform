@@ -1,0 +1,116 @@
+@media all and (max-width: 1650px){
+  span, button {
+    font-size: 14px !important;
+  }
+}
+
+@media all and (max-width: 420px){
+  span, button {
+    font-size: 10px !important;
+  }
+}
+
+.pageWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+
+  .contentWrapper {
+    margin-top: 5.2rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    width: 60%;
+
+    padding: 3% 0 5% 0;
+
+    background: #222222;
+
+    .applicationsWrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+
+      padding: 2% 7% 2% 7%;
+    }
+
+    .applicationWrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      column-gap: 20%;
+      margin: 1rem 0 1rem 0;
+      height: 74px;
+
+
+
+     .nickname {
+       width: 30%;
+         span {
+           word-break: unset;
+         }
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 10%;
+        width: 70%;
+        flex-wrap: wrap;
+
+      }
+    }
+
+    .accept {
+      background: #28B85C;
+    }
+
+    .reject {
+      background: #FF6B7F;
+    }
+
+      .accept, .reject {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3% 8% 3% 8%;
+
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        font-size: 24px;
+        font-weight: bold;
+
+        color: #FFFFFF;
+      }
+
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+  }
+
+  overflow: scroll;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #C4C4C4;
+  }
+}

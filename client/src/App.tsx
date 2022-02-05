@@ -14,9 +14,13 @@ function App() {
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       */}
+      <div className={s.navBar}>
+         <Navbar />
+      </div>
+      <div className={s.pageWrapper}>
+        <AppRouter/>
+      </div>
 
-      <Navbar />
-      <AppRouter/>
     </div>
   )
 }
