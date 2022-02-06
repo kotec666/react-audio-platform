@@ -12,7 +12,10 @@ const SingersPage = () => {
         </div>
       </div>
 
-      <div style={{maxWidth: '90%'}} className={s.resultsWrapper}>
+      <div style={{maxWidth: '90%', maxHeight: '450px'}} className={s.resultsWrapper}>
+        <Singer id={1} name={'Первый исполнитель'} />
+        <Singer id={1} name={'Первый исполнитель'} />
+        <Singer id={1} name={'Первый исполнитель'} />
         <Singer id={1} name={'Первый исполнитель'} />
         <Singer id={1} name={'Первый исполнитель'} />
         <Singer id={1} name={'Первый исполнитель'} />

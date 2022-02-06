@@ -1,0 +1,216 @@
+@media all and (max-width: 1700px) {
+    .trackNameWrapper {
+        column-gap: 0 !important;
+    }
+    .trackFavoriteWrapper {
+        margin-left: 10px !important;
+    }
+}
+
+@media all and (max-width: 1300px) {
+}
+
+@media all and (max-width: 1200px) {
+    .trackNameWrapper {
+        width: 30% !important;
+    }
+
+    .trackControlsWrapper {
+        width: 50% !important;
+    }
+}
+
+
+@media all and (max-width: 900px) {
+    .activeTrackWrapper {
+        flex-direction: column !important;
+        height: 100px !important;
+
+        .trackNameWrapper {
+            width: 5% !important;
+        }
+
+        .trackControlsWrapper {
+            width: 50% !important;
+        }
+    }
+
+    .trackNameWrapper {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+}
+
+@media all and (max-width: 600px) {
+    .activeTrackWrapper {
+        flex-direction: column !important;
+        height: 100% !important;
+
+        .trackNameWrapper {
+            height: 100% !important;
+        }
+
+        .trackControlsWrapper {
+            height: 100% !important;
+        }
+    }
+}
+
+@media all and (max-width: 285px) {
+    .trackVolumeWrapper {
+        flex-direction: column !important;
+    }
+
+    .trackPictureWrapper, .trackFavoriteWrapper {
+        max-width: 25px;
+        max-height: 25px;
+    }
+
+    .activeTrackWrapper {
+        flex-direction: column !important;
+        height: 100px !important;
+        margin: 0;
+        padding: 0;
+
+        .trackNameWrapper {
+            width: 5% !important;
+        }
+
+        .trackControlsWrapper {
+            width: 50% !important;
+        }
+    }
+}
+
+
+
+
+.activeTrackWrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+}
+
+.trackNameWrapper, .trackControlsWrapper, .trackVolumeWrapper {
+    height: 100%;
+}
+
+.trackNameWrapper {
+    width: 25%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 3%;
+    padding-left: 3%;
+
+    .trackPictureWrapper, .trackFavoriteWrapper {
+        min-width: 50px;
+        min-height: 50px;
+    }
+}
+
+.trackNamesWrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+
+    .trackMainNameWrapper {
+
+    }
+
+    .trackMainNameWrapper, .trackGroupNameWrapper {
+        font-size: 12px;
+    }
+
+    .trackGroupNameWrapper {
+        margin-top: 7%;
+        color: #4B4B4B;
+        width: 65px;
+    }
+}
+
+.trackControlsWrapper {
+    width: 50%;
+
+    .trackControls, .controlIcon, .trackTimingLineWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 5%;
+    }
+
+    .trackControls {
+        margin-top: 2%;
+    }
+
+    .controlIcon {
+
+    }
+
+    .trackTimingLineWrapper {
+        margin-top: 1%;
+        input {
+            width: 50%;
+            height: 5px;
+        }
+
+        span {
+            font-size: 15px;
+        }
+    }
+}
+
+.trackVolumeWrapper {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 2%;
+
+
+    .volumeWrapper, .volumeInputWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .volumeInputWrapper {
+        width: 60%;
+    }
+
+    .volumeWrapper {
+        width: 10%;
+        cursor: pointer;
+    }
+
+    input {
+        height: 5px;
+    }
+}
+
+.trackFavoriteWrapper {
+    cursor: pointer;
+    margin-left: 20%;
+}
+
+.trackPictureWrapper {
+    background: linear-gradient(360deg, #28B85C -64.32%, rgba(40, 184, 92, 0) 50%);
+    border: 1px solid #C4C4C4;
+}
+
+.trackPictureWrapper, .trackFavoriteWrapper {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: 100%;
+        height: 100%;
+        max-width: 30px;
+        max-height: 30px;
+    }
+}
