@@ -86,6 +86,17 @@
     width: 100%;
 
     padding: 3% 10% 5% 10%;
+
+    .singersWrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      column-gap: 10%;
+      row-gap: 50px;
+    }
+
     .trackListWrapper {
       width: 100%;
       background: #222222;
