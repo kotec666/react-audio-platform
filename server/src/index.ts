@@ -3,21 +3,23 @@ import path from 'path'
 import cors from 'cors'
 import fileUpload from 'express-fileupload'
 import sequelize from './utils/db'
-// const models = require('./models/models')
-// import router from './routes'
+const models = require('./models/models')
 import errorHandler from './middleware/ErrorHandlingMiddleware'
+import cookieParser from 'cookie-parser'
+import router from './routes'
 
 require('dotenv').config({ path: __dirname+'/.env' })
 
 const app:Application = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 
 
 app.use(express.static(path.resolve(__dirname, 'static')))
-app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
+app.use(cors())
 app.use(fileUpload({}))
-// app.use('/api', router)
+app.use('/api', router)
 
 
 // Обработка ошибок, последний Middleware
@@ -27,7 +29,7 @@ async function start() {
   try {
     await sequelize.sync()
     app.listen(PORT)
-    console.log('day a')
+    console.log(PORT)
   } catch (e) {
     console.log(e)
   }

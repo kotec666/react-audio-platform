@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 
-const ApiError = require('./../error/ApiError')
+import ApiError from './../error/ApiError'
 
 
 interface IErr {

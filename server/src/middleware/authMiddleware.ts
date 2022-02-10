@@ -1,8 +1,8 @@
 import jwt, {JwtPayload} from 'jsonwebtoken'
 import { NextFunction, Request, Response } from 'express'
 import { UserInstance } from '../models/interfaces'
-
-require('dotenv').config({ path: __dirname+'/.env' })
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
 export interface IGetUserAuthInfoRequest extends Request {
   user: UserInstance | string | JwtPayload
@@ -22,7 +22,7 @@ class authMiddleware {
         return res.status(401).json({ message: 'Не авторизован' })
       }
 
-      const decoded = jwt.verify(token, 'processSECRET_KEY=secret_jwt_key132123')
+      const decoded = jwt.verify(token, `${process.env.JWT_ACCESS_SECRET}`)
       req.user = decoded
       next()
     } catch (e) {

@@ -1,21 +1,30 @@
+interface IBadReq {
+  status: number
+  message: string
+}
+
 class ApiError {
-  private status: number
-  private message: string
+  status: number
+  message: string
 
     constructor(status: number, message: string) {
         this.status = status
         this.message = message
     }
 
-    static badRequest(message: string) {
-        return new ApiError(404, message)
+    static unauthorizedError() {
+        return new ApiError(401, 'Пользователь не авторизован')
     }
 
-    static internal(message: string) {
+    static badRequest(message: string): IBadReq {
+        return new ApiError(400, message)
+    }
+
+    static internal(message: string, errors = []) {
         return new ApiError(500, message)
     }
 
-    static forbidden(message: string) {
+    static forbidden(message: string, errors = []) {
         return new ApiError(403, message)
     }
 

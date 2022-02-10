@@ -1,5 +1,10 @@
 import { Model } from 'sequelize'
 
+export interface TokenInstance extends Model {
+  id: number
+  refreshToken: string
+}
+
 export interface UserInstance extends Model {
   id: number
   login: string
@@ -7,6 +12,8 @@ export interface UserInstance extends Model {
   email: string
   role: string
   pseudonym: string
+  isActivated: boolean
+  activationLink: string
 }
 
 export interface ApplicationInstance extends Model {

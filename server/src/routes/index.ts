@@ -1,14 +1,15 @@
-// import express from 'express'
-// const router = express.Router()
-//
-// import toyRouter from './toyRouter'
+import express from 'express'
+const router = express.Router()
+
+
 // import typeRouter from './typeRouter'
-//
-//
-//
-// router.use('/toy', toyRouter)
+import userRouter from './userRouter'
+
+
+
 // router.use('/type', typeRouter)
-//
-//
-//
-// export default router
+router.use('/user', userRouter)
+
+
+
+export default router

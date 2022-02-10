@@ -3,13 +3,30 @@ import {
     AlbumInstance,
     ApplicationInstance,
     FavoriteInstance,
-    favoriteTrackInstance, GenreInstance,
+    favoriteTrackInstance,
+    GenreInstance,
     RecentlyInstance,
     recentlyTrackInstance,
+    TokenInstance,
     TrackInstance,
     UserInstance
 } from './interfaces'
 import sequelize from '../utils/db'
+
+
+export const Token = sequelize.define<TokenInstance>("token", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    },
+    refreshToken: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        unique: false
+    },
+})
 
 
 export const User = sequelize.define<UserInstance>("user", {
@@ -42,8 +59,15 @@ export const User = sequelize.define<UserInstance>("user", {
         type: DataTypes.STRING,
         defaultValue: "",
         allowNull: false,
-        unique: true
+        unique: false
     },
+    isActivated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    activationLink: {
+        type: DataTypes.STRING,
+    }
 })
 
 
@@ -161,6 +185,9 @@ export const Genre = sequelize.define<GenreInstance>("genre", {
     },
 })
 
+User.hasOne(Token)
+Token.belongsTo(User)
+
 User.hasOne(Application)
 Application.belongsTo(User)
 
@@ -188,10 +215,10 @@ Track.belongsTo(Genre)
 Album.hasMany(Track, {as: 'albumTracks'})
 Track.belongsTo(Album)
 
-Track.hasOne(FavoriteTrack, {as: 'tracksFavorite'})
+Track.hasOne(FavoriteTrack, {as: 'tracksFavorite'}) // remove tracksFavorite? it gives unused tracksFavoriteId
 FavoriteTrack.belongsTo(Track)
 
-Track.hasOne(RecentlyTrack, {as: 'tracksRecently'})
+Track.hasOne(RecentlyTrack, {as: 'tracksRecently'}) // remove tracksRecently? it gives unused tracksRecentlyId
 RecentlyTrack.belongsTo(Track)
 
 Favorite.belongsToMany(Track, { through: {model: FavoriteTrack, unique: false} })
