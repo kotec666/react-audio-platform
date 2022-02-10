@@ -1,0 +1,63 @@
+import { Model } from 'sequelize'
+
+export interface UserInstance extends Model {
+  id: number
+  login: string
+  password: string
+  email: string
+  role: string
+  pseudonym: string
+}
+
+export interface ApplicationInstance extends Model {
+  id: number
+  userId: number
+  pseudonym: string
+}
+
+export interface RecentlyInstance extends Model {
+  id: number
+  userId: number
+}
+
+export interface FavoriteInstance extends Model {
+  id: number
+  userId: number
+}
+
+
+export interface recentlyTrackInstance extends Model {
+  id: number
+  trackId: number
+  recentlyId: number
+}
+
+export interface favoriteTrackInstance extends Model {
+  id: number
+  trackId: number
+  favoriteId: number
+}
+
+
+export interface TrackInstance extends Model {
+  id: number
+  name: string
+  streams: number
+  trackAudio: string
+  albumId: number
+  userId: number
+  genreId: number
+}
+
+export interface AlbumInstance extends Model {
+  id: number
+  name: string
+  trackId: number
+  userId: number
+}
+
+export interface GenreInstance extends Model {
+  id: number
+  name: string
+  code: string
+}
