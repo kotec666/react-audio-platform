@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { NextFunction, Response, Request } from 'express'
+import ApiError from '../error/ApiError'
+import tokenService from '../service/tokenService'
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
@@ -21,7 +23,7 @@ export interface IAuthUserRequest extends Request {
 
 class checkRoleMiddleware {
 
-  checkRole (role: string) {
+  checkRole (roles: Array<string>) {
     return function(req: Request, res: Response, next: NextFunction) {
       if (req.method === 'OPTIONS') {
         next()
@@ -32,22 +34,26 @@ class checkRoleMiddleware {
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
           const token = req.headers.authorization.split(' ')[1]  // Bearer jsakldjklasjlk
           if (!token) {
-            return res.status(401).json({ message: 'Не авторизован' })
+            return next(ApiError.unauthorizedError())
           }
 
-          const decoded = <jwt.IUserJWT>jwt.verify(token, `${process.env.JWT_ACCESS_SECRET}`)
+          const userData = tokenService.validateAccessToken(token)
+          if (!userData) {
+            return next(ApiError.unauthorizedError())
+          }
 
-          if (decoded.role !== role) {
+          if (!roles.includes(userData.role)) {
             return res.status(403).json({ message: 'Нет доступа' })
           }
 
-
-          req.user = decoded
+          req.user = userData
           next()
+        } else {
+          return next(ApiError.unauthorizedError())
         }
 
       } catch (e) {
-        res.status(401).json({ message: 'Не авторизован' })
+        return next(ApiError.unauthorizedError())
       }
     }
   }

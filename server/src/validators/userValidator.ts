@@ -1,4 +1,4 @@
-import { body } from 'express-validator'
+import { body, cookie, param } from 'express-validator'
 
 class UserValidator {
   checkCreateUser() {
@@ -13,6 +13,39 @@ class UserValidator {
       body('password')
         .notEmpty()
         .isLength({min: 5, max: 26})
+    ]
+  }
+
+  checkLoginUser() {
+    return [
+      body('login')
+        .notEmpty()
+        .isLength({min: 3, max: 26}),
+      body('password')
+        .notEmpty()
+        .isLength({min: 5, max: 26})
+    ]
+  }
+
+  checkLogoutUser() {
+    return [
+      cookie('refreshToken')
+        .notEmpty()
+    ]
+  }
+
+
+  checkActivateUser() {
+    return [
+      param('link')
+        .notEmpty()
+    ]
+  }
+
+  checkRefreshUser() {
+    return [
+      cookie('refreshToken')
+        .notEmpty()
     ]
   }
 

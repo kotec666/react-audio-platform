@@ -1,6 +1,7 @@
 import { UserInstance } from '../models/interfaces'
 
-interface IUser extends Omit<UserInstance, 'password'> {}
+export interface IUser extends Omit<UserInstance, 'password'> {}
+
 
 class UserDto {
   id: number

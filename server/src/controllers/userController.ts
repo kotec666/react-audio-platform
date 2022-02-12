@@ -26,22 +26,13 @@ class UserController {
 
     }
 
-    async getUsers(req:Request, res:Response, next:NextFunction) {
-
-      try {
-        const users = ['1', '2', '3']
-        return res.json(users)
-      } catch (e) {
-        next(e)
-      }
-
-    }
-
     async login(req:Request, res:Response, next:NextFunction) {
 
       try {
-        const users = await User.findAll()
-        return res.json(users)
+        const {login, password} = req.body
+        const userData = await userService.login(login, password)
+        res.cookie('refreshToken', userData.refreshToken,{maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true,}) //  secure: true (for https connection)})
+        return res.json(userData)
       } catch (e) {
         next(e)
       }
@@ -51,8 +42,14 @@ class UserController {
     async refresh(req:Request, res:Response, next:NextFunction) {
 
       try {
-        const users = await User.findAll()
-        return res.json(users)
+        const {refreshToken} = req.cookies
+        const userData = await userService.refresh(refreshToken)
+        res.cookie('refreshToken', userData.refreshToken,
+          { maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            //  secure: true (for https connection)
+           })
+        return res.json(userData)
       } catch (e) {
         next(e)
       }
@@ -62,8 +59,10 @@ class UserController {
     async logout(req:Request, res:Response, next:NextFunction) {
 
       try {
-        const users = await User.findAll()
-        return res.json(users)
+        const {refreshToken} = req.cookies
+        const token = await userService.logout(refreshToken)
+        res.clearCookie('refreshToken')
+        return res.json(token)
       } catch (e) {
         next(e)
       }
@@ -71,7 +70,6 @@ class UserController {
     }
 
     async activate(req:Request, res:Response, next:NextFunction) {
-
       try {
         const activationLink = req.params.link
         await userService.activate(activationLink)
@@ -81,6 +79,18 @@ class UserController {
       }
 
     }
+
+
+  async getUsers(req:Request, res:Response, next:NextFunction) {
+
+    try {
+      const users = await userService.getAllUsers()
+      return res.json(users)
+    } catch (e) {
+      next(e)
+    }
+
+  }
 
 
 

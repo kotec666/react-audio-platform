@@ -1,15 +1,13 @@
-import jwt, {JwtPayload} from 'jsonwebtoken'
+
 import { NextFunction, Request, Response } from 'express'
-import { UserInstance } from '../models/interfaces'
+import ApiError from '../error/ApiError'
+import tokenService from '../service/tokenService'
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
-export interface IGetUserAuthInfoRequest extends Request {
-  user: UserInstance | string | JwtPayload
-}
 
 class authMiddleware {
-  auth (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) {
+  auth (req: Request, res: Response, next: NextFunction) {
     if (req.method === 'OPTIONS') {
       next()
     }
@@ -19,14 +17,18 @@ class authMiddleware {
       if (req.headers.authorization && req.headers.authorization.split(' ')[1]) {
         token = req.headers.authorization.split(' ')[1]  // Bearer jsakldjklasjlk
       } else {
-        return res.status(401).json({ message: 'Не авторизован' })
+        return next(ApiError.unauthorizedError())
       }
 
-      const decoded = jwt.verify(token, `${process.env.JWT_ACCESS_SECRET}`)
-      req.user = decoded
+      const userData = tokenService.validateAccessToken(token)
+      if (!userData) {
+        return next(ApiError.unauthorizedError())
+      }
+
+      req.user = userData
       next()
     } catch (e) {
-      res.status(401).json({ message: 'Не авторизован' })
+      return next(ApiError.unauthorizedError())
     }
   }
 }
