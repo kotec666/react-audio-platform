@@ -1,13 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import s from './HomePage.module.scss'
 import Album from '../../components/Album/Album'
 import Singer from '../../components/Singer/Singer'
 import TrackComponent from '../../components/TrackComponent/TrackComponent'
+import { userAPI } from '../../servicesAPI/UserService'
+import { ILoginUserReq } from '../../models/IUser'
+import { useAppSelector } from '../../hooks/redux'
+import { getAccessCookie } from '../../utils/cookie'
 
 const HomePage = () => {
+  const {user, users} = useAppSelector(state => state.userReducer)
+  const [fetchAllUsers] = userAPI.useFetchAllUsersMutation()
+
+  const fetcha = async () => {
+    await fetchAllUsers('').unwrap()
+  }
+
   return (
     <div className={s.pageWrapper}>
       <div style={{marginTop: '6.825rem'}} className={s.contentWrapper}>
+
+        <button onClick={fetcha}>GEEEEEEEET</button>
+        {JSON.stringify(users, null, 3)} <br/> {getAccessCookie()}
 
         <div className={s.search}>
           <input type="text" placeholder="Поиск..."/>

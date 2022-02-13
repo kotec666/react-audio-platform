@@ -1,14 +1,28 @@
 import Cookies from 'js-cookie'
 
-export const setSessionCookie = (token: string) => {
-	removeSessionCookie()
-	Cookies.set('sessionToken', token)
+export const setAccessCookie = (token: string) => {
+	removeAccessCookie()
+	Cookies.set('accessToken', token)
 }
 
-export const getSessionCookie = () => {
-	return Cookies.get('sessionToken')
+export const getAccessCookie = () => {
+	return Cookies.get('accessToken')
 }
 
-export const removeSessionCookie = () => {
-	Cookies.remove('sessionToken')
+export const removeAccessCookie = () => {
+	Cookies.remove('accessToken')
+}
+
+
+export const setRefreshCookie = (token: string) => {
+	removeRefreshCookie()
+	Cookies.set('refreshToken', token)
+}
+
+export const getRefreshCookie = () => {
+	return Cookies.get('refreshToken')
+}
+
+export const removeRefreshCookie = () => {
+	Cookies.remove('refreshToken')
 }

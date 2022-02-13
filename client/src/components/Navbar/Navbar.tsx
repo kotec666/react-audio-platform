@@ -20,13 +20,22 @@ import {
   PROFILE_ROUTE, RECENTLY_ROUTE,
   REGISTRATION_ROUTE, SINGERS_ROUTE
 } from '../../utils/consts'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { clearUser } from '../../store/reducers/UserSlice'
+import { userAPI } from '../../servicesAPI/UserService'
 
 const Navbar = () => {
-  const isAuth = true
+  const {user, isAuth} = useAppSelector(state => state.userReducer)
+  const [logoutUser] = userAPI.useLogoutUserMutation()
 
-  const user = {
-    role: 'ADMIN'
+  const dispatch = useAppDispatch()
+
+
+  const handleLogoutUser = async () => {
+    await logoutUser('').unwrap()
+    dispatch(clearUser())
   }
+
     return (
       <>
 
@@ -84,12 +93,12 @@ const Navbar = () => {
                     </div>
                     <div className={s.linkName}>Жанры</div>
                   </NavLink>
-                  <NavLink to={HOME_ROUTE + 'looooooogooooooooooouuuuuuuuttttt'} className={({ isActive }) => isActive ? s.linkActive : s.linkWrapper}>
+                  <div className={s.linkWrapper} onClick={handleLogoutUser}>
                     <div className={s.iconWrapper}>
                       <img src={logout} alt="icon"/>
                     </div>
                     <div className={s.linkName}>Выход</div>
-                  </NavLink>
+                  </div>
                   {
                     user.role === 'ADMIN' ?
                       <>

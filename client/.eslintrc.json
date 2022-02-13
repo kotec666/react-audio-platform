@@ -25,13 +25,12 @@
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/ban-types": "off",
         "padded-blocks": ["error", { "blocks": "never" }],
+        "no-unused-expressions": "off",
+        "no-unused-vars": "off",
         "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
         "indent": "off",
         "linebreak-style": 0,
-        "quotes": [
-            "error",
-            "single"
-        ],
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
         "semi": [
             "error",
             "never"

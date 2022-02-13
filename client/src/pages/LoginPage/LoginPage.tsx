@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import s from './LoginPage.module.scss'
 import google from './../../utils/icons/google.png'
 import github from './../../utils/icons/github.png'
 import vk from './../../utils/icons/vk.png'
-import { REGISTRATION_ROUTE } from '../../utils/consts'
+import { HOME_ROUTE, REGISTRATION_ROUTE } from '../../utils/consts'
+import { useAppSelector } from '../../hooks/redux'
+import { userAPI } from '../../servicesAPI/UserService'
+import { ILoginUserReq, IRegistrationUserReq } from '../../models/IUser'
 
 const LoginPage = () => {
-  // const user = {
-  //   id: 1,
-  //   name: 'sta'
-  // }
-  //
-  // if (user) {
-  //   return (
-  //     <Navigate to={HOME_ROUTE} />
-  //   )
-  // }
+  const {isAuth} = useAppSelector(state => state.userReducer)
+  const [loginUser] = userAPI.useLoginUserMutation()
+  const [registrationUser] = userAPI.useRegistrationUserMutation()
 
   const location = useLocation()
   const currentPath = location.pathname.split('/')
@@ -24,19 +20,37 @@ const LoginPage = () => {
 
   useEffect(() => {
     setPage(currentPath[1])
-    console.log(page)
   }, [location])
+
+  const [login, setLogin] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const registrationHandler = async () => {
+    await registrationUser({login, password, email} as IRegistrationUserReq).unwrap()
+    await loginUser({login, password} as ILoginUserReq).unwrap()
+  }
+
+  const loginHandler = async () => {
+    await loginUser({login, password} as ILoginUserReq).unwrap()
+  }
+
+    if (isAuth === true) {
+      return (
+        <Navigate to={HOME_ROUTE} />
+      )
+    }
 
     return (
       <div className={s.pageWrapper}>
         <div className={s.contentWrapper}>
-          <form>
-            <input type="text" placeholder={'Логин...'}/>
-            <input type="text" placeholder={'Пароль...'}/>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <input type="text" placeholder={'Логин...'} onChange={(e) => setLogin(e.target.value)}  value={login}/>
+            <input type="password" placeholder={'Пароль...'} onChange={(e) => setPassword(e.target.value)}  value={password}/>
             {
               page === REGISTRATION_ROUTE.slice(1)
                 ?
-                <input type="text" placeholder={'Email...'}/>
+                <input type="text" placeholder={'Email...'} onChange={(e) => setEmail(e.target.value)} value={email}/>
                 : null
             }
             <div className={s.anotherMethod}>
@@ -51,8 +65,8 @@ const LoginPage = () => {
             {
               page === REGISTRATION_ROUTE.slice(1)
                 ?
-                  <button>Регистрация</button>
-                : <button>Вход</button>
+                  <button onClick={registrationHandler}>Регистрация</button>
+                : <button onClick={loginHandler}>Вход</button>
             }
           </form>
         </div>
