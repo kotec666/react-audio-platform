@@ -8,7 +8,7 @@ export interface TokenInstance extends Model {
 export interface UserInstance extends Model {
   id: number
   login: string
-  password: string
+  password?: string
   email: string
   role: string
   pseudonym: string

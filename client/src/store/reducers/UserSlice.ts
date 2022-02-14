@@ -16,10 +16,8 @@ interface UserState {
     isLoading: boolean
     error: string,
     isAuth: boolean
-    accessToken: string
-    users: Array<IUser>
+    accessToken?: string
 }
-
 
 const initialState: UserState = {
     user: {id: 0, login: '', email: '', role: '', pseudonym: '', isActivated: false, activationLink: ''},
@@ -27,7 +25,6 @@ const initialState: UserState = {
     error: '',
     isAuth: false,
     accessToken: '',
-    users: []
 }
 
 
@@ -75,9 +72,13 @@ export const userSlice = createSlice({
         }
       )
       builder.addMatcher(
-        userAPI.endpoints.fetchAllUsers.matchFulfilled,
+        userAPI.endpoints.getUser.matchFulfilled,
         (state, { payload }) => {
-          state.users = payload
+          state.accessToken = payload !== null ? payload.accessToken : ''
+          state.user = payload.user
+          state.isAuth = true
+          setAccessCookie(`${payload.accessToken}`)
+          setRefreshCookie(`${payload.refreshToken}`)
         }
       )
         builder.addMatcher(

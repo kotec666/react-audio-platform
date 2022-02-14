@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import ApiError from '../error/ApiError'
 import tokenService from '../service/tokenService'
 const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+require('dotenv').config({ path: path.resolve(__dirname, './../../.env') })
 
 
 class authMiddleware {

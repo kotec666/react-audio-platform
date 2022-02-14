@@ -3,7 +3,7 @@ import { NextFunction, Response, Request } from 'express'
 import ApiError from '../error/ApiError'
 import tokenService from '../service/tokenService'
 const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+require('dotenv').config({ path: path.resolve(__dirname, './../../.env') })
 
 declare module 'jsonwebtoken' {
   export interface IUserJWT extends jwt.JwtPayload {
@@ -45,7 +45,6 @@ class checkRoleMiddleware {
           if (!roles.includes(userData.role)) {
             return res.status(403).json({ message: 'Нет доступа' })
           }
-
           req.user = userData
           next()
         } else {

@@ -43,7 +43,8 @@ export const User = sequelize.define<UserInstance>("user", {
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true,
+        defaultValue: ''
     },
     email: {
         type: DataTypes.STRING,

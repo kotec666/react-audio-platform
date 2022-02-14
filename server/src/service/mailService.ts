@@ -1,7 +1,7 @@
 import nodemailer, { Transporter } from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+require('dotenv').config({ path: path.resolve(__dirname, './../../.env') })
 
 class MailService {
   private transporter: Transporter<SMTPTransport.SentMessageInfo>
@@ -31,7 +31,7 @@ class MailService {
             <a href="${link}">${link}</a>
           </div>
         `
-    })
+    }).catch(console.warn)
   }
 }
 

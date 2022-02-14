@@ -10,10 +10,33 @@ import {
     IRegistrationUserReq,
     IRegistrationUserRes, IUser
 } from '../models/IUser'
-import { getAccessCookie, getRefreshCookie } from '../utils/cookie'
+import { getRefreshCookie } from '../utils/cookie'
 import { baseQueryWithReauth } from './UnauthorizedInterceptor'
 
 // baseQuery: fetchBaseQuery({baseUrl: BASE_URL, prepareHeaders(headers) {return headers}, credentials: 'include'}),
+
+// const baseQuery = fetchBaseQuery({baseUrl: 'http://localhost:5000/api/user', prepareHeaders(headers) {return headers}, credentials: 'include'})
+// export const baseQueryWithReauth: BaseQueryFn<
+//   string | FetchArgs,
+//   unknown,
+//   FetchBaseQueryError
+//   > = async (args, api, extraOptions) => {
+//     let result = await baseQuery(args, api, extraOptions)
+//     if (result.error && result.error.status === 401) {
+//         // try to get a new token
+//         const refreshResult = await baseQuery({ url: 'http://localhost:5000/api/user/token/refresh/', method: 'POST' }, api, extraOptions);
+//         if (refreshResult.data) {
+//             // store the new token
+//             api.dispatch(tokenReceived(refreshResult.data as string))
+//             // retry the initial query
+//             result = await baseQuery(args, api, extraOptions)
+//         } else {
+//             api.dispatch(clearUser())
+//         }
+//     }
+//     return result
+// }
+
 
 export const userAPI = createApi({
     reducerPath: 'userAPI',
@@ -47,12 +70,15 @@ export const userAPI = createApi({
             }),
             invalidatesTags: ['User']
         }),
-        fetchAllUsers: build.mutation<Array<IUser>, string>({
+        getUser: build.mutation<IUser, ''>({
             query: () => ({
-                url: `/getAll`,
+                url: `/login/success`,
                 method: 'get',
                 headers: {
-                    'Authorization': `Bearer ${getAccessCookie()}`,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'cookie': `${getRefreshCookie()}`,
                 },
             }),
             invalidatesTags: ['User']

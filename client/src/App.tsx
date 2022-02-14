@@ -5,17 +5,25 @@ import Navbar from './components/Navbar/Navbar'
 import ActiveTrack from './components/ActiveTrack/ActiveTrack'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
 import { getAccessCookie, removeAccessCookie, setAccessCookie } from './utils/cookie'
+import { userAPI } from './servicesAPI/UserService'
 import { setUser } from './store/reducers/UserSlice'
 
 
 function App() {
   const dispatch = useAppDispatch()
   const {accessToken} = useAppSelector(state => state.userReducer)
+  const [getUser] = userAPI.useGetUserMutation()
+
+  useEffect(() => {
+    ( async () => {
+      await getUser('')
+    })()
+  }, [])
 
   useEffect(() => {
     const accessCookie = getAccessCookie()
     if(accessCookie)
-      dispatch(setUser(accessCookie))
+        dispatch(setUser(accessCookie))
     console.log(accessCookie)
   }, [])
 
@@ -23,10 +31,16 @@ function App() {
     console.log('Token refreshed')
     const authStatus = !!accessToken
 
-    if(authStatus)
-      setAccessCookie(accessToken)
-    else
+    if(authStatus) {
+      if (accessToken) {
+        setAccessCookie(accessToken)
+      } else {
+        removeAccessCookie()
+      }
+    }
+    else {
       removeAccessCookie()
+    }
   }, [accessToken])
 
   return (

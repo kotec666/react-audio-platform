@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import {User} from '../models/models'
 import userService from '../service/userService'
 const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+require('dotenv').config({ path: path.resolve(__dirname, './../../.env') })
 
 class UserController {
 
@@ -60,6 +59,7 @@ class UserController {
 
       try {
         const { refreshToken } = req.cookies
+        req.logout()
         const token = await userService.logout(refreshToken)
         res.clearCookie('refreshToken')
         return res.json(token)

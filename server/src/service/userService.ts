@@ -6,19 +6,24 @@ import UserDto from '../dtos/userDto'
 import * as uuid from 'uuid'
 import ApiError from '../error/ApiError'
 const path = require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+require('dotenv').config({ path: path.resolve(__dirname, './../../.env') })
 
 class UserService {
 
   async registration(login: string, password: string, email: string) {
-    const candidate = await User.findOne({ where: { email: email } })
+    const candidate = await User.findOne({ where: { email: email, login: login } })
     if (candidate) {
-      throw ApiError.badRequest(`Пользователь с адресом ${email} уже существует`)
+      throw ApiError.badRequest(`Пользователь с адресом ${email} уже существует, логин должен быть уникален`)
     }
     const hashPassword = await bcrypt.hash(password, 3)
     const activationLink = uuid.v4()
+    if (email === 'null') {
+      email = uuid.v4()
+    }
     const user = await User.create({login: login, password: hashPassword, email: email, role: 'USER', pseudonym: '', isActivated: false, activationLink: activationLink})
-    await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
+    if (email !== 'null') {
+      await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
+    }
     const userDto = new UserDto(user)
     const tokens = tokenService.generateTokens({...userDto})
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
@@ -43,7 +48,10 @@ class UserService {
     if (!user) {
       throw ApiError.badRequest(`Пользователя с логином ${login} не существует`)
     }
-    const isPasswordEquals = await bcrypt.compare(password, user.password)
+    let isPasswordEquals
+    if (user.password) {
+       isPasswordEquals = await bcrypt.compare(password, user.password)
+    }
     if (!isPasswordEquals) {
       throw ApiError.badRequest(`Неверный пароль`)
     }

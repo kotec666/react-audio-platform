@@ -4,11 +4,14 @@ import cors from 'cors'
 import fileUpload from 'express-fileupload'
 import sequelize from './utils/db'
 const models = require('./models/models')
+require('./passport')
 import errorHandler from './middleware/ErrorHandlingMiddleware'
 import cookieParser from 'cookie-parser'
 import router from './routes'
+import cookieSession from 'cookie-session'
+import passport from 'passport'
 
-require('dotenv').config({ path: __dirname+'/.env' })
+require('dotenv').config({ path: __dirname+'./../.env' })
 
 const app:Application = express()
 const PORT = process.env.PORT || 5000
@@ -17,8 +20,18 @@ const PORT = process.env.PORT || 5000
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(express.json())
 app.use(cookieParser())
+app.use(
+  cookieSession({
+    name: 'accessToken',
+    keys: ['keyOne'],
+    maxAge: 24 * 60 * 60 * 100
+  })
+)
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(cors({
   credentials: true,
+  methods:'GET,POST,PUT,DELETE',
   origin:`${process.env.CLIENT_URL}`
 }))
 app.use(fileUpload({}))

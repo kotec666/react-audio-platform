@@ -2,8 +2,6 @@ import {combineReducers, configureStore} from '@reduxjs/toolkit'
 import userReducer from './reducers/UserSlice'
 import {userAPI} from '../servicesAPI/UserService'
 
-
-
 const rootReducer = combineReducers({
     userReducer,
     [userAPI.reducerPath]: userAPI.reducer,
@@ -12,7 +10,7 @@ const rootReducer = combineReducers({
 export const setupStore = () => {
     return configureStore({
         reducer: rootReducer,
-        middleware: (getDefaultMiddleware => getDefaultMiddleware().concat(userAPI.middleware))
+        middleware: (getDefaultMiddleware => getDefaultMiddleware().concat(userAPI.middleware,))
     })
 }
 

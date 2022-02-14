@@ -6,8 +6,10 @@ export interface IUser {
     pseudonym: string
     isActivated: boolean
     activationLink: string
+    refreshToken?: string
+    accessToken?: string
+    user: IUser
 }
-
 
 
 //запрос на сервер

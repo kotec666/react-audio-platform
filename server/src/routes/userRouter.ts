@@ -5,6 +5,53 @@ import userController from '../controllers/userController'
 import checkRoleMiddleware from '../middleware/checkRoleMiddleware'
 import expressValidatorMiddleware from '../middleware/expressValidatorMiddleware'
 import authMiddleware from '../middleware/authMiddleware'
+import passport from 'passport'
+import ApiError from '../error/ApiError'
+
+router.get(
+  '/login/success', (req, res) => {
+    if (req.user) {
+      res.status(200).json({
+        refreshToken: req.cookies.refreshToken,
+        accessToken: req.cookies.accessToken,
+        user: req.user,
+      })
+    }
+  }
+)
+
+router.get(
+      '/login/failed', (req, res) => {
+           throw ApiError.unauthorizedError()
+    }
+)
+
+router.get(
+          '/google',
+                passport.authenticate('google',
+        { scope: ['email', 'profile']
+}))
+
+router.get(
+  '/auth/google/callback',
+        passport.authenticate('google', {
+        successRedirect: `${process.env.CLIENT_URL}`,
+        failureRedirect: `/login/failed`
+  })
+)
+
+router.get(
+        '/github',
+              passport.authenticate('github', { scope: ['email', 'profile']
+}))
+
+router.get(
+  '/auth/github/callback',
+        passport.authenticate('github', {
+        successRedirect: `${process.env.CLIENT_URL}`,
+        failureRedirect: `/login/failed`
+  })
+)
 
 router.post(
   '/registration',

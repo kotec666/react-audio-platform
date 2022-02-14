@@ -4,6 +4,7 @@ import s from './ProfilePage.module.scss'
 import Album from '../../components/Album/Album'
 import TrackComponent from '../../components/TrackComponent/TrackComponent'
 import Modal from '../../components/Modal/Modal'
+import { useAppSelector } from '../../hooks/redux'
 
 const ProfilePage = () => {
   const location = useLocation()
@@ -14,11 +15,7 @@ const ProfilePage = () => {
     console.log('curPath: ' + currentPath[1], 'singerId: ' + currentPath[2])
   }, [location])
 
-  const user = {
-    id: 1,
-    name: 'name',
-    role: 'SINGER'
-  }
+  const {user} = useAppSelector(state => state.userReducer)
 
   return (
     <div className={s.pageWrapper}>
@@ -37,9 +34,9 @@ const ProfilePage = () => {
             ?
             <>
               <div className={s.userInformationWrapper}>
-                <span>Логин: John Doe</span>
-                <span>Статус: пользователь</span>
-                <span>Email: example@mail.ru</span>
+                <span>Логин: {user.login}</span>
+                <span>Статус: {user.role}</span>
+                <span>Email: {user.email}</span>
               </div>
               <div className={s.applicationSendWrapper}>
                 <span>Подача заявки на получение статуса исполнителя</span>
@@ -60,9 +57,9 @@ const ProfilePage = () => {
                       <h5>John Doe</h5>
                     </div>
                     <div className={s.singerInfo}>
-                      <span>Логин: John Doe</span>
-                      <span>Статус: пользователь</span>
-                      <span>Email: example@mail.ru</span>
+                      <span>Логин: {user.login}</span>
+                      <span>Статус: {user.role}</span>
+                      <span>Email: {user.email}</span>
                     </div>
                 </div>
                 <div className={s.singerBodyWrapper}>

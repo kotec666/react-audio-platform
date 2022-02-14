@@ -41,6 +41,16 @@ const LoginPage = () => {
       )
     }
 
+    const googleAuthHandler = () => {
+      window.open(`${process.env.REACT_APP_API_URL}api/user/google`, '_self')
+      //fetch to login success
+    }
+
+    const githubAuthHandler = () => {
+      window.open(`${process.env.REACT_APP_API_URL}api/user/github`, '_self')
+      //fetch to login success
+    }
+
     return (
       <div className={s.pageWrapper}>
         <div className={s.contentWrapper}>
@@ -58,9 +68,9 @@ const LoginPage = () => {
               <hr/>
             </div>
             <div className={s.loginIcons}>
-              <img src={google} alt="loginMethod"/>
+              <img src={google} alt="loginMethod" onClick={googleAuthHandler}/>
               <img src={vk} alt="loginMethod"/>
-              <img src={github} alt="loginMethod"/>
+              <img src={github} alt="loginMethod" onClick={githubAuthHandler}/>
             </div>
             {
               page === REGISTRATION_ROUTE.slice(1)
