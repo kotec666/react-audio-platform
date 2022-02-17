@@ -28,5 +28,19 @@ router.get(
         genreController.getAll
 )
 
+router.get(
+  '/getAllByPage',
+        GenreValidator.checkGetByPage(),
+        expressValidatorMiddleware.handleValidationError,
+        genreController.getAllByPage
+)
+
+
+router.get(
+  '/getTracksByCode',
+        GenreValidator.checkGetByCode(),
+        expressValidatorMiddleware.handleValidationError,
+        genreController.getTracks
+)
 
 export default router

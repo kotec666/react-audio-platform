@@ -4,9 +4,9 @@ import recentlyTrackService from '../service/recentlyTrackService'
 
 class RecentlyTrackController {
 
-  async createRecently(req:Request, res:Response, next:NextFunction) {
+  async createRecently(req: Request, res: Response, next: NextFunction) {
     try {
-      const {trackId, recentlyId} = req.body
+      const { trackId, recentlyId } = req.body
       const recently = recentlyTrackService.create(+trackId, +recentlyId)
 
       return res.json(recently)
@@ -16,9 +16,9 @@ class RecentlyTrackController {
   }
 
 
-  async deleteRecently(req:Request, res:Response, next:NextFunction) {
+  async deleteRecently(req: Request, res: Response, next: NextFunction) {
     try {
-      const {trackId, recentlyId} = req.body
+      const { trackId, recentlyId } = req.body
       const recently = recentlyTrackService.deleteOne(+trackId, +recentlyId)
 
       return res.json(recently)

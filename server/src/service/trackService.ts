@@ -1,7 +1,8 @@
 import { Track } from '../models/models'
 import ApiError from '../error/ApiError'
 import * as uuid from 'uuid'
-import path from "path"
+import path from 'path'
+import { Op } from 'sequelize'
 
 
 class TrackService {
@@ -19,7 +20,6 @@ class TrackService {
         }
       }
     }
-
 
 
     let tracks = JSON.parse(trackInfo)
@@ -40,11 +40,11 @@ class TrackService {
 
     }
 
-    return { track: "dat" }
+    return { track: 'dat' }
   }
 
-  async deleteTrack(trackId: number) {
-    const track = await Track.findOne({ where: { id: trackId } })
+  async deleteTrack(trackId: number, userId: number) {
+    const track = await Track.findOne({ where: { id: trackId, userId: userId } })
     if (!track) {
       throw ApiError.badRequest(`Трека с id: ${track} не существует`)
     }
@@ -61,6 +61,25 @@ class TrackService {
     const track = await Track.findAll({ where: { userId: userId } })
     return track
   }
+
+  async getBySearchWord(_limit: number, page: number, search: string) {
+    try {
+      let offset = page * _limit - _limit
+      const track = await Track.findAndCountAll({
+        where: {
+          name: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        offset: +offset, limit: +_limit
+      })
+      return { track: track }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+
 
 }
 

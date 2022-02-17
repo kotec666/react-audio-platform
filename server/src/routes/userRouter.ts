@@ -90,5 +90,20 @@ router.get(
         userController.getUsers
 )
 
+router.get(
+  '/getAllByPage',
+        UserValidator.checkGetByPage(),
+        expressValidatorMiddleware.handleValidationError,
+        userController.getAllByPage
+)
+
+
+router.get(
+  '/getSingerDataById',
+        UserValidator.checkGetByDataById(),
+        expressValidatorMiddleware.handleValidationError,
+        userController.getSingerDataBySingerId
+)
+
 
 export default router

@@ -1,4 +1,4 @@
-import { body, header } from 'express-validator'
+import { body, header, query } from 'express-validator'
 
 class TrackValidator {
   checkCreateTrack() {
@@ -25,6 +25,17 @@ class TrackValidator {
     return [
       body('userId')
         .notEmpty()
+    ]
+  }
+
+  checkGetByPage() {
+    return [
+      query('_limit')
+        .notEmpty(),
+      query('page')
+        .notEmpty(),
+      query('search')
+        .optional()
     ]
   }
 

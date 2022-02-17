@@ -1,4 +1,4 @@
-import { body, header } from 'express-validator'
+import { body, header, query } from 'express-validator'
 
 class GenreValidator {
   checkCreateGenre() {
@@ -16,6 +16,24 @@ class GenreValidator {
       body('genreId')
         .notEmpty(),
       header('Authorization')
+    ]
+  }
+
+  checkGetByPage() {
+    return [
+      query('_limit')
+        .notEmpty(),
+      query('page')
+        .notEmpty(),
+      query('search')
+        .optional()
+    ]
+  }
+
+  checkGetByCode() {
+    return [
+      body('code')
+        .notEmpty(),
     ]
   }
 

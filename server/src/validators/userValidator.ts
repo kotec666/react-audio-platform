@@ -1,4 +1,4 @@
-import { body, cookie, param } from 'express-validator'
+import { body, cookie, param, query } from 'express-validator'
 
 class UserValidator {
   checkCreateUser() {
@@ -49,7 +49,23 @@ class UserValidator {
     ]
   }
 
+  checkGetByPage() {
+    return [
+      query('_limit')
+        .notEmpty(),
+      query('page')
+        .notEmpty(),
+      query('search')
+        .optional()
+    ]
+  }
 
+  checkGetByDataById() {
+    return [
+      body('userId')
+        .notEmpty(),
+    ]
+  }
 
 }
 

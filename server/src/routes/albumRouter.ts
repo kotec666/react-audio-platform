@@ -35,5 +35,19 @@ router.get(
        albumController.getAllByUser
 )
 
+router.get(
+  '/getAllByPage',
+       AlbumValidator.checkGetByPage(),
+       expressValidatorMiddleware.handleValidationError,
+       albumController.getAllByPage
+)
+
+router.get(
+  '/getTracksByAlbumId',
+       AlbumValidator.checkGetTracksByAlbumId(),
+       expressValidatorMiddleware.handleValidationError,
+       albumController.getTracks
+)
+
 
 export default router

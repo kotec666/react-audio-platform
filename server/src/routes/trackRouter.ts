@@ -35,4 +35,11 @@ router.get(
         trackController.getAllByUser
 )
 
+router.get(
+  '/getAllByPage',
+        TrackValidator.checkGetByPage(),
+        expressValidatorMiddleware.handleValidationError,
+        trackController.getAllByPage
+)
+
 export default router

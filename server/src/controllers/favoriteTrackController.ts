@@ -4,9 +4,9 @@ import favoriteTrackService from '../service/favoriteTrackService'
 
 class FavoriteTrackController {
 
-  async createFavorite(req:Request, res:Response, next:NextFunction) {
+  async createFavorite(req: Request, res: Response, next: NextFunction) {
     try {
-      const {trackId, favoriteId} = req.body
+      const { trackId, favoriteId } = req.body
       const favorite = favoriteTrackService.create(+trackId, +favoriteId)
 
       return res.json(favorite)
@@ -16,9 +16,9 @@ class FavoriteTrackController {
   }
 
 
-  async deleteFavorite(req:Request, res:Response, next:NextFunction) {
+  async deleteFavorite(req: Request, res: Response, next: NextFunction) {
     try {
-      const {trackId, favoriteId} = req.body
+      const { trackId, favoriteId } = req.body
       const favorite = favoriteTrackService.deleteOne(+trackId, +favoriteId)
 
       return res.json(favorite)

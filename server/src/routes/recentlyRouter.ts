@@ -14,4 +14,12 @@ router.get(
 )
 
 
+router.get(
+  '/getAllByPage',
+        recentlyValidator.checkGetByPage(),
+        expressValidatorMiddleware.handleValidationError,
+        recentlyController.getAllByPage
+)
+
+
 export default router

@@ -1,10 +1,12 @@
-import { Favorite, Recently, User } from '../models/models'
+import { Album, Favorite, Recently, Track, User } from '../models/models'
 import bcrypt from 'bcrypt'
 import mailService from './mailService'
 import tokenService from './tokenService'
 import UserDto from '../dtos/userDto'
 import * as uuid from 'uuid'
 import ApiError from '../error/ApiError'
+import { Op } from 'sequelize'
+
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, './../../.env') })
 
@@ -20,15 +22,23 @@ class UserService {
     if (email === 'null') {
       email = uuid.v4()
     }
-    const user = await User.create({login: login, password: hashPassword, email: email, role: 'USER', pseudonym: '', isActivated: false, activationLink: activationLink})
+    const user = await User.create({
+      login: login,
+      password: hashPassword,
+      email: email,
+      role: 'USER',
+      pseudonym: '',
+      isActivated: false,
+      activationLink: activationLink
+    })
     if (email !== 'null') {
       await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
     }
     const userDto = new UserDto(user)
-    const tokens = tokenService.generateTokens({...userDto})
+    const tokens = tokenService.generateTokens({ ...userDto })
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
-    const favorite = await Favorite.create({userId: userDto.id})
-    const recently = await Recently.create({userId: userDto.id})
+    const favorite = await Favorite.create({ userId: userDto.id })
+    const recently = await Recently.create({ userId: userDto.id })
 
     return { ...tokens, user: userDto }
 
@@ -43,20 +53,20 @@ class UserService {
     await user.save()
   }
 
-  async login (login: string, password: string) {
+  async login(login: string, password: string) {
     const user = await User.findOne({ where: { login: login } })
     if (!user) {
       throw ApiError.badRequest(`Пользователя с логином ${login} не существует`)
     }
     let isPasswordEquals
     if (user.password) {
-       isPasswordEquals = await bcrypt.compare(password, user.password)
+      isPasswordEquals = await bcrypt.compare(password, user.password)
     }
     if (!isPasswordEquals) {
       throw ApiError.badRequest(`Неверный пароль`)
     }
     const userDto = new UserDto(user)
-    const tokens = tokenService.generateTokens({...userDto})
+    const tokens = tokenService.generateTokens({ ...userDto })
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
     return { ...tokens, user: userDto }
@@ -79,16 +89,65 @@ class UserService {
     const user = await User.findOne({ where: { id: userData.id } })
     // @ts-ignore
     const userDto = new UserDto(user)
-    const tokens = tokenService.generateTokens({...userDto})
+    const tokens = tokenService.generateTokens({ ...userDto })
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
-    return {...tokens, user: userDto}
+    return { ...tokens, user: userDto }
   }
 
   async getAllUsers() {
     const users = User.findAll()
     return users
   }
+
+  async getAllPerPageAndSearchWord(_limit: number, page: number, search: string) {
+    try {
+      let offset = page * _limit - _limit
+      const singer = await User.findAndCountAll({
+        where: {
+          pseudonym: {
+            [Op.like]: `%${search}%`
+          }, role: 'SINGER'
+        }, offset: +offset, limit: +_limit
+      })
+
+      return { singer: singer }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+
+  async getAllPerPage(_limit: number, page: number) {
+    try {
+      let offset = page * _limit - _limit
+      const singer = await User.findAndCountAll({
+        where: {
+          role: 'SINGER'
+        }, offset: +offset, limit: +_limit
+      })
+      return { singer: singer }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async getSingerDataById(userId: number) {
+    try {
+      const singer = await User.findAll({
+        where: { id: userId, role: 'SINGER' },
+        include: [
+          { model: Track, as: 'userTracks' },
+          { model: Album, as: 'userAlbums' }
+        ]
+      })
+      return {singer: singer}
+    } catch
+      (e) {
+      console.log(e)
+    }
+  }
+
 }
 
 export default new UserService()
