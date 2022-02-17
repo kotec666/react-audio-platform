@@ -86,7 +86,7 @@ router.get(
 router.get(
   '/getAll',
         // authMiddleware.auth,
-        checkRoleMiddleware.checkRole(['ADMIN', 'SINGER']),
+        checkRoleMiddleware.checkRole(['ADMIN']),
         userController.getUsers
 )
 

@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes, IncludeThroughOptions, ThroughOptions } from 'sequelize'
 import {
     AlbumInstance,
     ApplicationInstance,
@@ -216,11 +216,14 @@ Track.belongsTo(Genre)
 Album.hasMany(Track, {as: 'albumTracks'})
 Track.belongsTo(Album)
 
-Track.hasOne(FavoriteTrack, {as: 'tracksFavorite'}) // remove tracksFavorite? it gives unused tracksFavoriteId
+Track.hasMany(FavoriteTrack, {as: 'tracksFavorite'})
 FavoriteTrack.belongsTo(Track)
 
-Track.hasOne(RecentlyTrack, {as: 'tracksRecently'}) // remove tracksRecently? it gives unused tracksRecentlyId
+Track.hasMany(RecentlyTrack, {as: 'tracksRecently'})
 RecentlyTrack.belongsTo(Track)
 
-Favorite.belongsToMany(Track, { through: {model: FavoriteTrack, unique: false} })
-Recently.belongsToMany(Track, { through: {model: RecentlyTrack, unique: false} })
+Favorite.belongsToMany(Track, { through: { model: FavoriteTrack, unique: false } as ThroughOptions } )
+Recently.belongsToMany(Track, { through: { model: RecentlyTrack, unique: false } as ThroughOptions } )
+
+Track.belongsToMany(Favorite, { through: { model: FavoriteTrack, unique: false } as ThroughOptions } )
+Track.belongsToMany(Recently, { through: { model: RecentlyTrack, unique: false } as ThroughOptions } )

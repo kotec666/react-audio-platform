@@ -8,7 +8,7 @@ export interface TokenInstance extends Model {
 export interface UserInstance extends Model {
   id: number
   login: string
-  password?: string
+  password: string
   email: string
   role: string
   pseudonym: string
@@ -24,7 +24,6 @@ export interface ApplicationInstance extends Model {
 
 export interface RecentlyInstance extends Model {
   id: number
-  userId: number
 }
 
 export interface FavoriteInstance extends Model {
@@ -35,8 +34,6 @@ export interface FavoriteInstance extends Model {
 
 export interface recentlyTrackInstance extends Model {
   id: number
-  trackId: number
-  recentlyId: number
 }
 
 export interface favoriteTrackInstance extends Model {
@@ -59,7 +56,6 @@ export interface TrackInstance extends Model {
 export interface AlbumInstance extends Model {
   id: number
   name: string
-  trackId: number
   userId: number
 }
 
