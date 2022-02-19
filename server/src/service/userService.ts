@@ -87,7 +87,9 @@ class UserService {
       throw ApiError.unauthorizedError()
     }
     const user = await User.findOne({ where: { id: userData.id } })
-    // @ts-ignore
+    if (!user) {
+      return { user: UserDto, accessToken: '', refreshToken: ''}
+    }
     const userDto = new UserDto(user)
     const tokens = tokenService.generateTokens({ ...userDto })
 
@@ -104,6 +106,7 @@ class UserService {
     try {
       let offset = page * _limit - _limit
       const singer = await User.findAndCountAll({
+        attributes: ['id', 'pseudonym'],
         where: {
           pseudonym: {
             [Op.like]: `%${search}%`
@@ -122,6 +125,7 @@ class UserService {
     try {
       let offset = page * _limit - _limit
       const singer = await User.findAndCountAll({
+        attributes: ['id', 'pseudonym'],
         where: {
           role: 'SINGER'
         }, offset: +offset, limit: +_limit
@@ -135,7 +139,8 @@ class UserService {
   async getSingerDataById(userId: number) {
     try {
       const singer = await User.findAll({
-        where: { id: userId, role: 'SINGER' },
+        where: { id: userId, role: 'SINGER'},
+        attributes: ['id', 'login', 'email', 'role', 'pseudonym'],
         include: [
           { model: Track, as: 'userTracks' },
           { model: Album, as: 'userAlbums' }

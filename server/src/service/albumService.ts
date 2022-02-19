@@ -4,9 +4,12 @@ import path from 'path'
 import * as uuid from 'uuid'
 import { Op } from 'sequelize'
 
+
+
+
 class AlbumService {
 
-  async addAlbum(name: string, userId: number, genreId: number, albumTracks: any, files: any) {
+  async addAlbum(name: string, userId: number, genreId: number, albumTracks: any, files:any) {
     const album = await Album.create({ name, userId })
 
     const generateName = () => {
@@ -43,13 +46,17 @@ class AlbumService {
     return { album: album }
   }
 
-  async deleteAlbum(albumId: number, userId: number) {
-    const album = await Album.findOne({ where: { id: albumId, userId: userId } })
+  async deleteAlbum(albumId: number, user: any) {
+    const album = await Album.findOne({ where: { id: albumId, userId: user.id } })
     if (!album) {
-      throw ApiError.badRequest(`Альбома с id: ${albumId} не существует`)
+      throw ApiError.badRequest(`Альбома с id: ${albumId} не существует, или альбом вам не принадлежит`)
     }
-    await album.destroy()
-    return { status: 204 }
+    if (user.role === 'ADMIN' || album.userId === user.id) {
+      await album.destroy()
+      return { status: 204 }
+    } else {
+      return { status: 404 }
+    }
   }
 
   async getAllAlbum() {
@@ -102,7 +109,7 @@ class AlbumService {
       where: { id: albumId },
       include: [{ model: Track, as: 'albumTracks' }]
     })
-    return {tracks: tracks}
+    return { tracks: tracks }
   }
 
 }

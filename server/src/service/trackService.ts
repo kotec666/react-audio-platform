@@ -31,7 +31,7 @@ class TrackService {
         name: i.name,
         streams: 0,
         trackAudio: fileName,
-        albumId: 1,
+        albumId: null,
         userId: userId,
         genreId: genreId
       })
@@ -40,16 +40,20 @@ class TrackService {
 
     }
 
-    return { track: 'dat' }
+    return { status: 201 }
   }
 
-  async deleteTrack(trackId: number, userId: number) {
-    const track = await Track.findOne({ where: { id: trackId, userId: userId } })
+  async deleteTrack(trackId: number, user: any) {
+    const track = await Track.findOne({ where: { id: trackId, userId: user.id } })
     if (!track) {
-      throw ApiError.badRequest(`Трека с id: ${track} не существует`)
+      throw ApiError.badRequest(`Трека с id: ${trackId} не существует, или трек вам не принадлежит`)
     }
-    await track.destroy()
-    return { status: 204 }
+    if (user.role === 'ADMIN' || track.userId === user.id) {
+      await track.destroy()
+      return { status: 204 }
+    } else {
+      return { status: 404 }
+    }
   }
 
   async getAllTrack() {
@@ -78,7 +82,6 @@ class TrackService {
       console.log(e)
     }
   }
-
 
 
 }

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import trackService from '../service/trackService'
+import jwt from 'jsonwebtoken'
 
 class TrackController {
 
@@ -22,9 +23,7 @@ class TrackController {
       if (!user) {
         return res.json('Пользователя нет')
       } else {
-        // @ts-ignore
-        const userId = user.id
-        const track = await trackService.deleteTrack(+trackId, +userId)
+        const track = await trackService.deleteTrack(+trackId, user)
         return res.json(track)
       }
 

@@ -28,26 +28,31 @@ class RecentlyController {
       let { _limit, page, search } = req.query
       const { userId } = req.body
 
-      // @ts-ignore
-      let offset = page * _limit - _limit
+      let offset:number
 
       if (!_limit || !page) {
         return res.json('empty params')
       } else {
         if (search) {
-          const recently = await Recently.findAndCountAll({
-            where: { userId: userId },
-            include: [{ model: Track, as: 'userTracksRecently', where: { name: { [Op.like]: `%${search}%` } } }],
-            offset: +offset,
-            limit: +_limit
-          })
-          return res.json({ recently: recently })
+          if (typeof page === 'string' && typeof _limit === 'string') {
+            offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
+            const recently = await Recently.findAndCountAll({
+              where: { userId: userId },
+              include: [{ model: Track, as: 'userTracksRecently', where: { name: { [Op.like]: `%${search}%` } } }],
+              offset: +offset,
+              limit: +_limit
+            })
+            return res.json({ recently: recently })
+          }
         } else {
-          const recently = await Recently.findAndCountAll({
-            where: { userId: userId },
-            include: [{ model: Track, as: 'userTracksRecently' }], offset: +offset, limit: +_limit
-          })
-          return res.json({ recently: recently })
+          if (typeof page === 'string' && typeof _limit === 'string') {
+            offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
+            const recently = await Recently.findAndCountAll({
+              where: { userId: userId },
+              include: [{ model: Track, as: 'userTracksRecently' }], offset: +offset, limit: +_limit
+            })
+            return res.json({ recently: recently })
+          }
         }
       }
     } catch (e) {

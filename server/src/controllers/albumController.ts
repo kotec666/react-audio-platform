@@ -21,14 +21,12 @@ class AlbumController {
 
   async deleteOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const { albumId } = req.body //? req.params
+      const { albumId } = req.body
       const { user } = req
       if (!user) {
         return res.json('Пользователя нет')
       } else {
-        // @ts-ignore
-        const userId = user.id
-        const album = await albumService.deleteAlbum(+albumId, +userId)
+        const album = await albumService.deleteAlbum(+albumId, user)
         return res.json(album)
       }
     } catch (e) {

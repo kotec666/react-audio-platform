@@ -28,26 +28,31 @@ class FavoriteController {
       let { _limit, page, search } = req.query
       const { userId } = req.body
 
-      // @ts-ignore
-      let offset = page * _limit - _limit
+      let offset:number
 
       if (!_limit || !page) {
         return res.json('empty params')
       } else {
         if (search) {
-          const favorite = await Favorite.findAndCountAll({
-            where: { userId: userId },
-            include: [{ model: Track, as: 'userTracksFavorite', where: { name: { [Op.like]: `%${search}%` } } }],
-            offset: +offset,
-            limit: +_limit
-          })
-          return res.json({ favorite: favorite })
+          if (typeof page === 'string' && typeof _limit === 'string') {
+              offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
+              const favorite = await Favorite.findAndCountAll({
+                where: { userId: userId },
+                include: [{ model: Track, as: 'userTracksFavorite', where: { name: { [Op.like]: `%${search}%` } } }],
+                offset: +offset,
+                limit: +_limit
+              })
+              return res.json({ favorite: favorite })
+          }
         } else {
-          const favorite = await Favorite.findAndCountAll({
-            where: { userId: userId },
-            include: [{ model: Track, as: 'userTracksFavorite' }], offset: +offset, limit: +_limit
-          })
-          return res.json({ favorite: favorite })
+          if (typeof page === 'string' && typeof _limit === 'string') {
+            offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
+            const favorite = await Favorite.findAndCountAll({
+              where: { userId: userId },
+              include: [{ model: Track, as: 'userTracksFavorite' }], offset: +offset, limit: +_limit
+            })
+            return res.json({ favorite: favorite })
+          }
         }
       }
     } catch (e) {
