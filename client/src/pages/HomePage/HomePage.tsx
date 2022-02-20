@@ -1,59 +1,101 @@
-import React from 'react'
+import React, { useState } from 'react'
 import s from './HomePage.module.scss'
 import Album from '../../components/Album/Album'
 import Singer from '../../components/Singer/Singer'
 import TrackComponent from '../../components/TrackComponent/TrackComponent'
+import { albumAPI } from '../../servicesAPI/AlbumService'
+import { useDebounce } from '../../hooks/useDebounce'
+import { singerAPI } from '../../servicesAPI/SingerService'
+import { trackAPI } from '../../servicesAPI/TrackService'
 
 const HomePage = () => {
+  const pageSize = 8
+  const page = 1
+  const [searchValue, setSearchValue] = useState('')
+  const search = useDebounce(searchValue, 500)
+  const { data: album, isLoading: isLoadingAlbum, isError: isErrorAlbum } = albumAPI.useGetAlbumQuery({limit: pageSize, page, search})
+  const { data: singer, isLoading: isLoadingSinger, isError: isErrorSinger } = singerAPI.useGetSingerQuery({ limit: pageSize, page, search })
+  const { data: track, isLoading: isLoadingTrack, isError: isErrorTrack } = trackAPI.useGetTrackQuery({ limit: pageSize, page, search })
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
+
+
   return (
     <div className={s.pageWrapper}>
       <div style={{marginTop: '6.825rem'}} className={s.contentWrapper}>
         <div className={s.search}>
-          <input type="text" placeholder="Поиск..."/>
+          <input type="text" placeholder="Поиск..." value={searchValue} onChange={(e) => handleSearch(e)} />
         </div>
 
         <div className={s.searchResults}>
 
           <div className={s.helpText}>
-            <span>Альбомы:</span>
+            {album && album.album.count !== 0 ? <span>Альбомы:</span> : null }
           </div>
 
           <div className={s.resultsWrapper}>
-
-            <Album id={1} name={'первый альбом'} />
-            <Album id={2} name={'первый альбом'} />
-            <Album id={3} name={'первый альбом'} />
-            <Album id={4} name={'первый альбом'} />
-            <Album id={5} name={'первый альбом'} />
-
+            {
+              isLoadingAlbum && isLoadingAlbum ? Array(6)
+                  .fill(0)
+                  .map((_, index) => <div key={index}>загружаюсь...</div>)
+                :
+                album && album.album.rows.map((album) => {
+                  return (
+                    <Album key={album.id} id={album.id} name={album.name} />
+                  )
+                })
+            }
+            { isErrorAlbum && <h1>Произошла ошибка при загрузке</h1> }
           </div>
 
           <div className={s.helpText}>
-            <span>Треки:</span>
+            {track && track.track && track.track.count !== 0 ? <span>Треки:</span> : null }
           </div>
 
           <div className={s.resultsWrapper}>
-
-            <TrackComponent id={1} name={'Первый трек'} />
-            <TrackComponent id={1} name={'Первый трек'} />
-            <TrackComponent id={1} name={'Первый трек'} />
-            <TrackComponent id={1} name={'Первый трек'} />
-            <TrackComponent id={1} name={'Первый трек'} />
-
+            {
+              isLoadingTrack && isLoadingTrack ? Array(6)
+                  .fill(0)
+                  .map((_, index) => <div key={index}>загружаюсь...</div>)
+                :
+                track && track?.track?.rows.map((track, index) => {
+                  return (
+                    <TrackComponent
+                      key={track.id}
+                      id={track.id}
+                      name={track.name}
+                      index={index}
+                      albumId={track.albumId}
+                      genreId={track.genreId}
+                      streams={track.streams}
+                      trackAudio={track.trackAudio}
+                      userId={track.userId}
+                    />
+                  )
+                })
+            }
+            { isErrorTrack && <h1>Произошла ошибка при загрузке</h1> }
           </div>
 
           <div className={s.helpText}>
-            <span>Исполнители:</span>
+            {singer && singer.singer.count !== 0 ? <span>Исполнители:</span> : null }
           </div>
 
           <div className={s.resultsWrapper}>
-
-            <Singer id={1} name={'Первый исполнитель'} />
-            <Singer id={2} name={'Первый исполнитель'} />
-            <Singer id={3} name={'Первый исполнитель'} />
-            <Singer id={3} name={'Первый исполнитель'} />
-            <Singer id={4} name={'Первый исполнитель'} />
-
+            {
+              isLoadingSinger && isLoadingSinger ? Array(6)
+                  .fill(0)
+                  .map((_, index) => <div key={index}>загружаюсь...</div>)
+                :
+                singer && singer.singer.rows.map((singer) => {
+                  return (
+                    <Singer key={singer.id} id={singer.id} pseudonym={singer.pseudonym} />
+                  )
+                })
+            }
+            {isErrorSinger && <h1>Произошла ошибка при загрузке</h1>}
           </div>
 
         </div>

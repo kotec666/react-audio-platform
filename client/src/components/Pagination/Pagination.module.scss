@@ -9,6 +9,9 @@
     transition: .3s;
 
     padding: 2% 1% 2% 1%;
+    background: none;
+    color: #FFFFFF;
+    font-weight: bold;
 
     &:hover {
         background: linear-gradient(360deg, #C013DC -100%, rgba(192, 19, 220, 0) 48.03%);
@@ -24,4 +27,8 @@
 
 .active {
     background: linear-gradient(360deg, #C013DC -100%, rgba(192, 19, 220, 0) 48.03%);
+}
+
+.inActive {
+    color: #b1b1b1;
 }

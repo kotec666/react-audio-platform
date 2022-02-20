@@ -6,11 +6,11 @@ import microphone from '../../utils/icons/microphone.png'
 
 interface SingerProps {
   id: number
-  name: string
+  pseudonym: string
 }
 
 
-const Singer:React.FC<SingerProps> = ({id, name}) => {
+const Singer:React.FC<SingerProps> = ({id, pseudonym}) => {
   return (
     <Link to={`${SINGERS_ROUTE + `/${id}`}`} className={s.singerResult}>
       <div className={s.singerWrapper}>
@@ -18,7 +18,7 @@ const Singer:React.FC<SingerProps> = ({id, name}) => {
           <img src={microphone} alt="album" />
         </div>
       </div>
-      <span>{name}</span>
+      <span>{pseudonym}</span>
     </Link>
   )
 }

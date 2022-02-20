@@ -185,10 +185,16 @@ const ProfilePage = () => {
                       <span>Треки исполнителя:</span>
                     </div>
                     <div className={s.TracksWrapper}>
-                      <TrackComponent id={1} name={'Первый трек'} />
-                      <TrackComponent id={1} name={'Первый трек'} />
-                      <TrackComponent id={1} name={'Первый трек'} />
-                      <TrackComponent id={1} name={'Первый трек'} />
+                      <TrackComponent
+                        id={1}
+                        name={'name'}
+                        index={1}
+                        albumId={1}
+                        genreId={1}
+                        streams={1}
+                        trackAudio={'st'}
+                        userId={1}
+                      />
                     </div>
                   </div>
 

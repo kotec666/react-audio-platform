@@ -13,6 +13,7 @@ function App() {
   const dispatch = useAppDispatch()
   const {accessToken} = useAppSelector(state => state.userReducer)
   const [getUser] = userAPI.useGetUserMutation()
+  const {active} = useAppSelector(state => state.playerReducer)
 
   useEffect(() => {
     ( async () => {
@@ -51,9 +52,13 @@ function App() {
       <div className={s.pageWrapper}>
         <AppRouter/>
       </div>
-      <div className={s.activeTrack}>
-        <ActiveTrack />
-      </div>
+      {
+        active
+          ? <div className={s.activeTrack}>
+              <ActiveTrack />
+            </div>
+          : null
+      }
     </div>
   )
 }

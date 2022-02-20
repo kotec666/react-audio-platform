@@ -134,6 +134,12 @@
 .trackControlsWrapper {
     width: 50%;
 
+    .controlIcon {
+        cursor: pointer;
+        max-width: 30px;
+        max-height: 30px;
+    }
+
     .trackControls, .controlIcon, .trackTimingLineWrapper {
         display: flex;
         justify-content: center;

@@ -45,7 +45,7 @@ export const userAPI = createApi({
     endpoints: (build) => ({
         loginUser: build.mutation<ILoginUserRes, ILoginUserReq>({
             query: (user) => ({
-                url: `/login`,
+                url: `/user/login`,
                 method: 'POST',
                 body: user
             }),
@@ -53,7 +53,7 @@ export const userAPI = createApi({
         }),
         registrationUser: build.mutation<IRegistrationUserRes, IRegistrationUserReq>({
             query: (user) => ({
-                url: `/registration`,
+                url: `/user/registration`,
                 method: 'POST',
                 body: user
             }),
@@ -61,7 +61,7 @@ export const userAPI = createApi({
         }),
         logoutUser: build.mutation<ILogoutUserRes, string>({
             query: (user) => ({
-                url: `/logout`,
+                url: `/user/logout`,
                 method: 'POST',
                 body: user,
                 headers: {
@@ -72,7 +72,7 @@ export const userAPI = createApi({
         }),
         getUser: build.mutation<IUser, ''>({
             query: () => ({
-                url: `/login/success`,
+                url: `/user/login/success`,
                 method: 'get',
                 headers: {
                     Accept: 'application/json',
@@ -85,7 +85,7 @@ export const userAPI = createApi({
         }),
         refreshUser: build.query<IRefreshUserRes, IRefreshUserReq>({
             query: () => ({
-                url: `/refresh`,
+                url: `/user/refresh`,
                 method: 'GET',
                 headers: {
                     'cookie': `${getRefreshCookie()}`,

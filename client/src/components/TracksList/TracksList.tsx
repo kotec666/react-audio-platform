@@ -106,7 +106,7 @@ const TracksList = () => {
         </div>
 
         <div className={s.paginationWrapper}>
-          <Pagination pages={[1,2,3,4,5]} />
+          {/*<Pagination pages={[1,2,3,4,5]} />*/}
         </div>
       </div>
     </div>
