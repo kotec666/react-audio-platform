@@ -3,6 +3,7 @@ import { FavoriteTrack } from '../models/models'
 
 class FavoriteTrackService {
 
+
   async create(trackId: number, favoriteId: number) {
     const favoriteTrack = await FavoriteTrack.create({ trackId, favoriteId })
     return { favoriteTrack: favoriteTrack }

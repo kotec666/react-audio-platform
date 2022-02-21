@@ -1,4 +1,4 @@
-import { body, header } from 'express-validator'
+import { body, header, query } from 'express-validator'
 
 class FavoriteTrackValidator {
   checkDeleteTrackFavorite() {
@@ -16,6 +16,14 @@ class FavoriteTrackValidator {
       body('favoriteId')
         .notEmpty(),
       body('trackId')
+        .notEmpty(),
+      header('Authorization')
+    ]
+  }
+
+  checkGetTrackFavorite() {
+    return [
+      body('favoriteId')
         .notEmpty(),
       header('Authorization')
     ]

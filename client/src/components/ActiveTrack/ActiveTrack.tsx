@@ -11,6 +11,7 @@ import middleVolume from './../../utils/icons/middleVolume.png'
 import lowVolume from './../../utils/icons/lowVolume.png'
 import highVolume from './../../utils/icons/highVolume.png'
 import muteVolume from './../../utils/icons/muteVolume.png'
+import favoriteHeart from './../../utils/icons/favoriteHeart.png'
 import {
   pauseTrack,
   playTrack,
@@ -21,14 +22,18 @@ import {
   setVolume
 } from '../../store/reducers/PlayerReducer'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { isItemAdded } from '../../hooks/useIsAddedCheck'
 
 let audio: HTMLAudioElement
 
 const ActiveTrack = () => {
   const { active, pause, duration, currentTime, volume, trackIndex } = useAppSelector(state => state.playerReducer)
+
   const { track: tracks } = useAppSelector(state => state.trackReducer)
   const { user } = useAppSelector(state => state.userReducer)
   const dispatch = useAppDispatch()
+  const {favoriteTrack} = useAppSelector(state => state.favoriteTrackReducer)
+  const {favoriteId} = useAppSelector(state => state.favoriteReducer)
 
 
   const toPrevTrack = () => {
@@ -119,8 +124,12 @@ const ActiveTrack = () => {
     return ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ':' + ('0' + s).slice(-2)
   }
 
-  const addToFavorite = () => {
-    console.log(active.id, user.id) // + isAdded
+  const addToFavoriteHandler = () => {
+    console.log(active.id, favoriteId.id) // ! ! !
+  }
+
+  const deleteFromFavoriteHandler = () => {
+    console.log(active.id, favoriteId.id) // ! ! !
   }
 
   return (
@@ -139,10 +148,15 @@ const ActiveTrack = () => {
         </div>
         {
           user && user.id !== 0
-           ?  <div className={s.trackFavoriteWrapper} onClick={addToFavorite}>
-                <img src={heart} alt="heart"/>
-              </div>
-           :   null}
+           ?   isItemAdded(favoriteTrack.favoriteTrack, active.id)
+                ? <div className={s.trackFavoriteWrapper} onClick={addToFavoriteHandler}>
+                    <img src={favoriteHeart} alt="heart"/>
+                  </div>
+                : <div className={s.trackFavoriteWrapper} onClick={deleteFromFavoriteHandler}>
+                    <img src={heart} alt="heart"/>
+                  </div>
+           :   null
+        }
       </div>
       <div className={s.trackControlsWrapper}>
         <div className={s.trackControls}>

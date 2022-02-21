@@ -21,5 +21,10 @@ router.get(
         favoriteController.getAllByPage
 )
 
+router.get(
+  '/getFavoriteIdByUserId',
+        favoriteController.getFavoriteIdByUserId
+)
+
 
 export default router

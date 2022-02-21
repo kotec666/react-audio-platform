@@ -1,8 +1,23 @@
 import { NextFunction, Request, Response } from 'express'
 import favoriteTrackService from '../service/favoriteTrackService'
+import { FavoriteTrack } from '../models/models'
 
 
 class FavoriteTrackController {
+
+  async getFavoriteByFavoriteId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { _favoriteId } = req.query
+      if (!_favoriteId) {
+        return res.json('invalid params')
+      }
+      const favoriteTrack = await FavoriteTrack.findAll({ where: { favoriteId: +_favoriteId } })
+
+      return res.json({ favoriteTrack })
+    } catch (e) {
+      next(e)
+    }
+  }
 
   async createFavorite(req: Request, res: Response, next: NextFunction) {
     try {

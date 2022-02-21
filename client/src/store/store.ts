@@ -5,11 +5,15 @@ import genreReducer from './reducers/GenreSlice'
 import singerReducer from './reducers/SingerSlice'
 import trackReducer from './reducers/TrackSlice'
 import playerReducer from './reducers/PlayerReducer'
+import favoriteReducer from './reducers/FavoriteSlice'
+import favoriteTrackReducer from './reducers/FavoriteTrackSlice'
 import { userAPI } from '../servicesAPI/UserService'
 import { albumAPI } from '../servicesAPI/AlbumService'
 import { genreAPI } from '../servicesAPI/GenreService'
 import { singerAPI } from '../servicesAPI/SingerService'
 import { trackAPI } from '../servicesAPI/TrackService'
+import { favoriteAPI } from '../servicesAPI/FavoriteService'
+import { favoriteTrackAPI } from '../servicesAPI/FavoriteTrackService'
 
 const rootReducer = combineReducers({
   userReducer,
@@ -18,17 +22,29 @@ const rootReducer = combineReducers({
   singerReducer,
   trackReducer,
   playerReducer,
+  favoriteReducer,
+  favoriteTrackReducer,
   [userAPI.reducerPath]: userAPI.reducer,
   [albumAPI.reducerPath]: albumAPI.reducer,
   [genreAPI.reducerPath]: genreAPI.reducer,
   [singerAPI.reducerPath]: singerAPI.reducer,
   [trackAPI.reducerPath]: trackAPI.reducer,
+  [favoriteAPI.reducerPath]: favoriteAPI.reducer,
+  [favoriteTrackAPI.reducerPath]: favoriteTrackAPI.reducer,
 })
 
 export const setupStore = () => {
   return configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware => getDefaultMiddleware().concat(userAPI.middleware, albumAPI.middleware, genreAPI.middleware, singerAPI.middleware, trackAPI.middleware))
+    middleware: (getDefaultMiddleware => getDefaultMiddleware().concat(
+      userAPI.middleware,
+      albumAPI.middleware,
+      genreAPI.middleware,
+      singerAPI.middleware,
+      trackAPI.middleware,
+      favoriteAPI.middleware,
+      favoriteTrackAPI.middleware,
+    ))
   })
 }
 

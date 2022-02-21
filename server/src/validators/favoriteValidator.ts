@@ -1,11 +1,12 @@
-import { body, header, query } from 'express-validator'
+import {  header, query } from 'express-validator'
 
 class FavoriteValidator {
   checkGetFavorite() {
     return [
-      body('userId')
+      query('userId')
         .notEmpty(),
       header('Authorization')
+        .notEmpty()
     ]
   }
 
@@ -16,7 +17,11 @@ class FavoriteValidator {
       query('page')
         .notEmpty(),
       query('search')
-        .optional()
+        .optional(),
+      query('userId')
+        .notEmpty(),
+      header('Authorization')
+        .notEmpty()
     ]
   }
 

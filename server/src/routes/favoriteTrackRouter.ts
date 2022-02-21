@@ -5,6 +5,10 @@ import favoriteTrackValidator from '../validators/favoriteTrackValidator'
 import expressValidatorMiddleware from '../middleware/expressValidatorMiddleware'
 import favoriteTrackController from '../controllers/favoriteTrackController'
 
+router.get(
+  '/getAll',
+        favoriteTrackController.getFavoriteByFavoriteId
+)
 
 router.post(
   '/add',
