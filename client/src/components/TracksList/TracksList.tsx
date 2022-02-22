@@ -7,6 +7,7 @@ import deleteIcon from './../../utils/icons/deleteIcon.png'
 import trackListPlay from './../../utils/icons/trackListPlay.png'
 import Pagination from '../Pagination/Pagination'
 
+
 const TracksList = () => {
   const location = useLocation()
 
@@ -26,6 +27,8 @@ const TracksList = () => {
       console.log('albums ' + currentPath[2])
     }
   }, [location])
+
+  // const {data: singerInfo, error, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: singerId})
 
   return (
     <div className={s.pageWrapper}>

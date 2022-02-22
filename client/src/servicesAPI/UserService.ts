@@ -10,8 +10,9 @@ import {
     IRegistrationUserReq,
     IRegistrationUserRes, IUser
 } from '../models/IUser'
-import { getRefreshCookie } from '../utils/cookie'
+import { getAccessCookie, getRefreshCookie } from '../utils/cookie'
 import { baseQueryWithReauth } from './UnauthorizedInterceptor'
+import { IFavorite } from '../models/IFavorite'
 
 // baseQuery: fetchBaseQuery({baseUrl: BASE_URL, prepareHeaders(headers) {return headers}, credentials: 'include'}),
 

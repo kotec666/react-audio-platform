@@ -23,6 +23,8 @@ import {
 } from '../../store/reducers/PlayerReducer'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { isItemAdded } from '../../hooks/useIsAddedCheck'
+import { favoriteTrackAPI } from '../../servicesAPI/FavoriteTrackService'
+import { singerAPI } from '../../servicesAPI/SingerService'
 
 let audio: HTMLAudioElement
 
@@ -34,6 +36,9 @@ const ActiveTrack = () => {
   const dispatch = useAppDispatch()
   const {favoriteTrack} = useAppSelector(state => state.favoriteTrackReducer)
   const {favoriteId} = useAppSelector(state => state.favoriteReducer)
+  const [addFavorite] = favoriteTrackAPI.useAddFavoriteMutation()
+  const [deleteFavorite] = favoriteTrackAPI.useDeleteFavoriteMutation()
+  const {data: singerInfo, error, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: active ? active.userId : 0})
 
 
   const toPrevTrack = () => {
@@ -124,12 +129,12 @@ const ActiveTrack = () => {
     return ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ':' + ('0' + s).slice(-2)
   }
 
-  const addToFavoriteHandler = () => {
-    console.log(active.id, favoriteId.id) // ! ! !
+  const addToFavoriteHandler = async () => {
+    await addFavorite({trackId: active.id, favoriteId: favoriteId.id}).unwrap()
   }
 
-  const deleteFromFavoriteHandler = () => {
-    console.log(active.id, favoriteId.id) // ! ! !
+  const deleteFromFavoriteHandler = async () => {
+    await deleteFavorite({trackId: active.id, favoriteId: favoriteId.id}).unwrap()
   }
 
   return (
@@ -143,16 +148,16 @@ const ActiveTrack = () => {
             {active && active.name}
           </div>
           <div className={s.trackGroupNameWrapper}>
-            {active && active.userId} userId
+            {active && singerInfo && singerInfo.singer[0].pseudonym}
           </div>
         </div>
         {
           user && user.id !== 0
            ?   isItemAdded(favoriteTrack.favoriteTrack, active.id)
-                ? <div className={s.trackFavoriteWrapper} onClick={addToFavoriteHandler}>
+                ? <div className={s.trackFavoriteWrapper} onClick={deleteFromFavoriteHandler}>
                     <img src={favoriteHeart} alt="heart"/>
                   </div>
-                : <div className={s.trackFavoriteWrapper} onClick={deleteFromFavoriteHandler}>
+                : <div className={s.trackFavoriteWrapper} onClick={addToFavoriteHandler}>
                     <img src={heart} alt="heart"/>
                   </div>
            :   null

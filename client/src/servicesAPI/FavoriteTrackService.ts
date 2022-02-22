@@ -2,7 +2,8 @@ import {
     createApi, fetchBaseQuery
 } from '@reduxjs/toolkit/dist/query/react'
 import { IFavoriteTrack } from '../models/IFavoriteTrack'
-import { getAccessCookie } from '../utils/cookie'
+import { getAccessCookie, getRefreshCookie } from '../utils/cookie'
+import { IFavorite } from '../models/IFavorite'
 
 export const favoriteTrackAPI = createApi({
     reducerPath: 'favoriteTrackAPI',
@@ -18,6 +19,30 @@ export const favoriteTrackAPI = createApi({
                 }
             }),
             providesTags: result => ['FavoriteTrack']
+        }),
+        addFavorite: build.mutation<IFavorite, {trackId: number, favoriteId: number}>({
+            query: (favorite) => ({
+                url: `/favoriteTrack/add`,
+                method: 'POST',
+                body: favorite,
+                headers: {
+                    'Authorization': `${getAccessCookie()}`,
+                    'cookie': `${getRefreshCookie()}`,
+                },
+            }),
+            invalidatesTags: ['FavoriteTrack']
+        }),
+        deleteFavorite: build.mutation<IFavorite, {trackId: number, favoriteId: number}>({
+            query: (favorite) => ({
+                url: `/favoriteTrack/delete`,
+                method: 'DELETE',
+                body: favorite,
+                headers: {
+                    'Authorization': `${getAccessCookie()}`,
+                    'cookie': `${getRefreshCookie()}`,
+                },
+            }),
+            invalidatesTags: ['FavoriteTrack']
         }),
    //     loginUser: build.mutation<ILoginUserRes, ILoginUserReq>({
    //         query: (user) => ({

@@ -62,7 +62,7 @@ class UserValidator {
 
   checkGetByDataById() {
     return [
-      body('userId')
+      param('userId')
         .notEmpty(),
     ]
   }

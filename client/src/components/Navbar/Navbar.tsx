@@ -100,7 +100,7 @@ const Navbar = () => {
                     <div className={s.linkName}>Выход</div>
                   </div>
                   {
-                    user.role === 'ADMIN' ?
+                    user && user.role === 'ADMIN' ?
                       <>
                         <NavLink to={ADMIN_ROUTE} className={({ isActive }) => isActive ? s.linkActive : s.linkWrapper}>
                           <div className={s.iconWrapper}>

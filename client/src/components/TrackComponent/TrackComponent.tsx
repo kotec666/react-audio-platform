@@ -21,10 +21,7 @@ interface TrackProps {
 
 
 const TrackComponent:React.FC<TrackProps> = ({id, name, index, albumId, genreId, userId, streams, trackAudio}) => {
-  const {active, pause} = useAppSelector(state => state.playerReducer)
   const dispatch = useAppDispatch()
-
-
   const Track = {id, name, userId, streams, trackAudio, genreId, albumId}
 
   const play = () => {

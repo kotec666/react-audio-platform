@@ -42,13 +42,11 @@ const LoginPage = () => {
     }
 
     const googleAuthHandler = () => {
-      window.open(`${process.env.REACT_APP_API_URL}api/user/google`, '_self')
-      //fetch to login success
+      window.open(`${process.env.REACT_APP_API_URL}/api/user/google`, '_self')
     }
 
     const githubAuthHandler = () => {
-      window.open(`${process.env.REACT_APP_API_URL}api/user/github`, '_self')
-      //fetch to login success
+      window.open(`${process.env.REACT_APP_API_URL}/api/user/github`, '_self')
     }
 
     return (

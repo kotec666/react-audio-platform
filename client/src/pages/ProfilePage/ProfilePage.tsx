@@ -1,36 +1,52 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import s from './ProfilePage.module.scss'
 import Album from '../../components/Album/Album'
 import TrackComponent from '../../components/TrackComponent/TrackComponent'
 import Modal from '../../components/Modal/Modal'
-import { useAppSelector } from '../../hooks/redux'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { singerAPI } from '../../servicesAPI/SingerService'
+import { clearSinger } from '../../store/reducers/SingerSlice'
 
 const ProfilePage = () => {
   const location = useLocation()
   const [isModalOpened, setIsModalOpened] = useState(false)
-
-  useEffect(() => {
-    const currentPath = location.pathname.split('/')
-    console.log('curPath: ' + currentPath[1], 'singerId: ' + currentPath[2])
-  }, [location])
+  const [isCurrentUserPage, setIsCurrentUserPage] = useState(false)
+  const [singerId, setSingerId] = useState(0)
 
   const {user} = useAppSelector(state => state.userReducer)
+  const { id } = useParams()
+
+  const dispatch = useAppDispatch()
+  const currentPath = location.pathname.split('/')
+
+  useEffect(() => {
+    const isProfile = currentPath[1]
+    const userId = id
+
+   if (isProfile === 'profile') {
+       setSingerId(user.id)
+   } else {
+     if (!userId) {
+       setSingerId(user.id)
+     } else {
+       setSingerId(+userId)
+     }
+   }
+
+    return () => {
+     setSingerId(0)
+      dispatch(clearSinger())
+    }
+  }, [id])
+
+  const {data: singerInfo, error, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: singerId})
 
   return (
     <div className={s.pageWrapper}>
       <div className={s.contentWrapper}>
-        <h1>
-          если в адресе нет id -
-          выводить данные текущего
-          пользователя, если есть id
-          в адресе - искать данные исполнителя
-          на бэкенде
-          <br/>
-          {user.role}
-        </h1>
         {
-          user.role !== 'SINGER'
+          user.role !== 'SINGER' && currentPath[1] === 'profile'
             ?
             <>
               <div className={s.userInformationWrapper}>
@@ -42,7 +58,7 @@ const ProfilePage = () => {
                 <span>Подача заявки на получение статуса исполнителя</span>
                 <hr/>
                 <form>
-                  <input type="text" placeholder={'Творческий псевдоним'}/>
+                  <input type="text" placeholder={'Творческий псевдоним...'}/>
                   <button>Отправить</button>
                 </form>
               </div>
@@ -54,18 +70,37 @@ const ProfilePage = () => {
               <div className={s.singerInfoWrapper}>
                 <div className={s.singerHeaderWrapper}>
                     <div className={s.pseudonymWrapper}>
-                      <h5>John Doe</h5>
+                      {
+                        singerInfo && singerInfo?.singer[0]?.pseudonym ? <h5>{singerInfo.singer[0].pseudonym}</h5> : null
+                      }
+
                     </div>
-                    <div className={s.singerInfo}>
-                      <span>Логин: {user.login}</span>
-                      <span>Статус: {user.role}</span>
-                      <span>Email: {user.email}</span>
-                    </div>
+                  {
+                   singerInfo && user.id === singerInfo?.singer[0]?.id
+                      ? <div className={s.singerInfo}>
+                          <span>Логин: {user.login}</span>
+                          <span>Статус: {user.role}</span>
+                          <span>Email: {user.email}</span>
+                        </div>
+                      : null
+                  }
                 </div>
                 <div className={s.singerBodyWrapper}>
 
                     <div className={s.modalBtn}>
-                      <button className={s.uploadBtn} onClick={() => setIsModalOpened(!isModalOpened)}>Загрузить</button>
+                      {
+
+                          singerInfo && user.id === singerInfo?.singer[0]?.id
+                            ?
+                                <button
+                                  className={s.uploadBtn}
+                                  onClick={() => setIsModalOpened(!isModalOpened)}
+                                >
+                                  Загрузить
+                                </button>
+                            : null
+                      }
+
                       <Modal isOpened={isModalOpened} setIsOpened={setIsModalOpened} title={'Загрузка'} >
                         <form className={s.uploadAlbum}>
                           <span className={s.uploadText}>Загрузка альбома</span>
@@ -171,12 +206,15 @@ const ProfilePage = () => {
                           <span>Альбомы исполнителя:</span>
                         </div>
                         <div className={s.AlbumsWrapper}>
-                            <Album id={1} name={'Первый альбом'} />
-                            <Album id={1} name={'Первый альбом'} />
-                            <Album id={1} name={'Первый альбом'} />
-                            <Album id={1} name={'Первый альбом'} />
-                            <Album id={1} name={'Первый альбом'} />
-                            <Album id={1} name={'Первый альбом'} />
+                          {
+                           singerInfo && singerInfo.singer.map(elem => {
+                                    return (
+                                      elem.userAlbums.map(album => {
+                                        return <Album key={album.id} id={album.id} name={album.name} />
+                                      })
+                                    )
+                                  })
+                          }
                         </div>
                     </div>
 
@@ -185,16 +223,28 @@ const ProfilePage = () => {
                       <span>Треки исполнителя:</span>
                     </div>
                     <div className={s.TracksWrapper}>
-                      <TrackComponent
-                        id={1}
-                        name={'name'}
-                        index={1}
-                        albumId={1}
-                        genreId={1}
-                        streams={1}
-                        trackAudio={'st'}
-                        userId={1}
-                      />
+
+                      {
+                      singerInfo && singerInfo.singer.map(elem => {
+                          return (
+                            elem.userTracks.map((track, index) => {
+                              return (
+                                <TrackComponent
+                                  key={track.id}
+                                  id={track.id}
+                                  name={track.name}
+                                  index={index}
+                                  albumId={track.albumId}
+                                  genreId={track.genreId}
+                                  streams={track.streams}
+                                  trackAudio={track.trackAudio}
+                                  userId={track.userId}
+                                />
+                              )
+                            })
+                          )
+                        })
+                      }
                     </div>
                   </div>
 

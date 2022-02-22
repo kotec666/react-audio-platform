@@ -116,7 +116,10 @@ class UserController {
 
   async getSingerDataBySingerId(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.body
+      const { userId } = req.params
+      if (!userId) {
+        return res.json('invalid query')
+      }
       const user = await userService.getSingerDataById(+userId)
       return res.json(user)
     } catch (e) {

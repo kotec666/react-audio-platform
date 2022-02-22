@@ -1,7 +1,7 @@
 import {
     createApi, fetchBaseQuery
 } from '@reduxjs/toolkit/dist/query/react'
-import { ISinger } from '../models/ISinger'
+import { ISinger, ISingerDetailed } from '../models/ISinger'
 
 export const singerAPI = createApi({
     reducerPath: 'singerAPI',
@@ -11,6 +11,13 @@ export const singerAPI = createApi({
         getSinger: build.query<ISinger, { limit: number, page: number, search: string}>({
             query: ({limit, page, search}) => ({
                 url: `/getAllByPage/?_limit=${limit}&page=${page}&search=${search}`,
+                method: 'GET',
+            }),
+            providesTags: result => ['Singer']
+        }),
+        getSingerDataById: build.query<ISingerDetailed, { userId: number }>({
+            query: ({userId}) => ({
+                url: `/getSingerDataById/${userId}`,
                 method: 'GET',
             }),
             providesTags: result => ['Singer']

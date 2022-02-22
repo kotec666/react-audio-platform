@@ -99,7 +99,7 @@ router.get(
 
 
 router.get(
-  '/getSingerDataById',
+  '/getSingerDataById/:userId',
         UserValidator.checkGetByDataById(),
         expressValidatorMiddleware.handleValidationError,
         userController.getSingerDataBySingerId

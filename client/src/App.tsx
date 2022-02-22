@@ -21,8 +21,8 @@ function App() {
 
   const {user} = useAppSelector(state => state.userReducer)
 
-  favoriteAPI.useGetFavoriteQuery({page: 1, limit: 14, search: '', userId: user.id})
-  favoriteAPI.useGetFavoriteIdQuery({userId: user.id})
+  favoriteAPI.useGetFavoriteQuery({page: 1, limit: 14, search: '', userId: user ? user.id : 0})
+  favoriteAPI.useGetFavoriteIdQuery({userId: user ? user.id : 0})
 
   const { favoriteId } = useAppSelector(state => state.favoriteReducer)
 
