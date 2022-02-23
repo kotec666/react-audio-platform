@@ -22,23 +22,5 @@ export const singerAPI = createApi({
             }),
             providesTags: result => ['Singer']
         }),
-   //     loginUser: build.mutation<ILoginUserRes, ILoginUserReq>({
-   //         query: (user) => ({
-   //             url: `/user/login`,
-   //             method: 'POST',
-   //             body: user
-   //         }),
-   //         invalidatesTags: ['Album']
-   //     }),
-   //     refreshUser: build.query<IRefreshUserRes, IRefreshUserReq>({
-   //         query: () => ({
-   //             url: `/user/refresh`,
-   //             method: 'GET',
-   //             headers: {
-   //                 'cookie': `${getRefreshCookie()}`,
-   //             },
-   //         }),
-   //         providesTags: result => ['Album']
-   //     }),
     })
 })

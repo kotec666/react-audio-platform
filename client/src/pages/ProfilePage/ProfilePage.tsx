@@ -7,12 +7,14 @@ import Modal from '../../components/Modal/Modal'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { singerAPI } from '../../servicesAPI/SingerService'
 import { clearSinger } from '../../store/reducers/SingerSlice'
+import { applicationAPI } from '../../servicesAPI/ApplicationService'
 
 const ProfilePage = () => {
   const location = useLocation()
   const [isModalOpened, setIsModalOpened] = useState(false)
   const [isCurrentUserPage, setIsCurrentUserPage] = useState(false)
   const [singerId, setSingerId] = useState(0)
+  const [applicationPseudonym, setApplicationPseudonym] = useState('')
 
   const {user} = useAppSelector(state => state.userReducer)
   const { id } = useParams()
@@ -40,13 +42,23 @@ const ProfilePage = () => {
     }
   }, [id])
 
-  const {data: singerInfo, error, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: singerId})
+  const {data: singerInfo, error: SingerError, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: singerId})
+  const [sendApplication,  { error: ApplicationError } ] = applicationAPI.useSendApplicationMutation()
+
+  const submitApplicationHandler = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await sendApplication({userId: user.id, pseudonym: applicationPseudonym})
+  }
+
+  const changeApplicationPseudonym = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setApplicationPseudonym(e.target.value)
+  }
 
   return (
     <div className={s.pageWrapper}>
       <div className={s.contentWrapper}>
         {
-          user.role !== 'SINGER' && currentPath[1] === 'profile'
+          user && user.role !== 'SINGER' && currentPath[1] === 'profile'
             ?
             <>
               <div className={s.userInformationWrapper}>
@@ -57,9 +69,10 @@ const ProfilePage = () => {
               <div className={s.applicationSendWrapper}>
                 <span>Подача заявки на получение статуса исполнителя</span>
                 <hr/>
-                <form>
-                  <input type="text" placeholder={'Творческий псевдоним...'}/>
-                  <button>Отправить</button>
+                <form onSubmit={submitApplicationHandler}>
+                  {ApplicationError ? JSON.stringify(ApplicationError) : null}
+                  <input type="text" placeholder={'Творческий псевдоним...'} onChange={changeApplicationPseudonym} value={applicationPseudonym}/>
+                  {user && user.isActivated ? <button>Отправить</button> : <div>Подтвердите почту, перед тем, как отправлять заявку</div>}
                 </form>
               </div>
               <div>
@@ -73,7 +86,6 @@ const ProfilePage = () => {
                       {
                         singerInfo && singerInfo?.singer[0]?.pseudonym ? <h5>{singerInfo.singer[0].pseudonym}</h5> : null
                       }
-
                     </div>
                   {
                    singerInfo && user.id === singerInfo?.singer[0]?.id

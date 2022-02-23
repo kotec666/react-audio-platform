@@ -10,7 +10,7 @@ import {
     IRegistrationUserReq,
     IRegistrationUserRes, IUser
 } from '../models/IUser'
-import { getAccessCookie, getRefreshCookie } from '../utils/cookie'
+import { getRefreshCookie } from '../utils/cookie'
 import { baseQueryWithReauth } from './UnauthorizedInterceptor'
 import { IFavorite } from '../models/IFavorite'
 

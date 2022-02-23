@@ -16,7 +16,7 @@ class GenreController {
 
   async deleteOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const { genreId } = req.body //? req.params
+      const { genreId } = req.params
       const genre = await genreService.deleteGenre(+genreId)
       return res.json(genre)
     } catch (e) {
@@ -54,7 +54,7 @@ class GenreController {
 
   async getTracks(req: Request, res: Response, next: NextFunction) {
     try {
-      const { code } = req.body
+      const { code } = req.params
       const tracks = await genreService.getTracksByCode(code)
       return res.json(tracks)
     } catch (e) {

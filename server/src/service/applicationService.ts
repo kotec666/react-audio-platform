@@ -9,23 +9,26 @@ class ApplicationService {
       throw ApiError.badRequest(`Заявка от пользователя с id: ${userId} уже существует, заявка должна быть уникальной`)
     }
     const user = await User.findOne({ where: { id: userId } })
-    let isSinger = false
+    let isSinger
     if (user) {
       isSinger = user.role === 'SINGER'
-    }
-    if (!isSinger) {
-      const unuqiePseudonym = await Application.findOne({ where: { pseudonym: pseudonym } })
-      if (unuqiePseudonym) {
-        throw ApiError.badRequest(`Заявка с псевдонимом: ${pseudonym} уже существует, псевдоним должeн быть уникален`)
+      console.log(isSinger)
+      if (!isSinger) {
+        const uniquePseudonym = await Application.findOne({ where: { pseudonym: pseudonym } })
+        if (uniquePseudonym) {
+          throw ApiError.badRequest(`Заявка с псевдонимом: ${pseudonym} уже существует, псевдоним должeн быть уникален`)
+        }
+        const uniqueUserPseudonym = await User.findOne({ where: { pseudonym: pseudonym } })
+        if (uniqueUserPseudonym) {
+          throw ApiError.badRequest(`Пользователь с псевдонимом: ${pseudonym} уже существует, псевдоним должeн быть уникален`)
+        }
+        const application = await Application.create({ userId: userId, pseudonym: `${pseudonym}` })
+        return { application: application }
+      } else  {
+        throw ApiError.badRequest(`У вас уже есть статус SINGER`)
       }
-      const unuqieUserPseudonym = await User.findOne({ where: { pseudonym: pseudonym } })
-      if (unuqieUserPseudonym) {
-        throw ApiError.badRequest(`Пользователь с псевдонимом: ${pseudonym} уже существует, псевдоним должeн быть уникален`)
-      }
-      const application = await Application.create({userId: userId, pseudonym: `${pseudonym}`})
-      return { application: application }
     } else {
-      throw ApiError.badRequest(`У вас уже есть статус SINGER`)
+      throw ApiError.badRequest(`ошибка, нет пользователя`)
     }
 
   }
@@ -36,7 +39,7 @@ class ApplicationService {
       throw ApiError.badRequest(`Заявка от пользователя с id: ${userId} не существует`)
     }
     await applications.destroy()
-    return {status: 204}
+    return { status: 204 }
   }
 
   async acceptApplication(userId: number, pseudonym: string) {
@@ -44,7 +47,7 @@ class ApplicationService {
     if (!applications) {
       throw ApiError.badRequest(`Заявка от пользователя с id: ${userId} не существует`)
     }
-    const user = await User.findOne({ where: { id: userId }})
+    const user = await User.findOne({ where: { id: userId } })
     if (!user) {
       throw ApiError.badRequest(`Пользователя с id: ${userId} не существует`)
     }
@@ -52,13 +55,13 @@ class ApplicationService {
     user.pseudonym = `${pseudonym}`
     await user.save()
     await this.deleteApplication(userId)
-    return {status: 200}
+    return { status: 200 }
   }
 
 
   async getAllApplications() {
-    const applications = Application.findAll()
-    return applications
+    const applications = await Application.findAll()
+    return { applications: applications }
   }
 }
 

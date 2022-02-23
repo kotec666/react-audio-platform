@@ -1,4 +1,4 @@
-import { body, header, query } from 'express-validator'
+import { body, header, param, query } from 'express-validator'
 
 class GenreValidator {
   checkCreateGenre() {
@@ -13,7 +13,7 @@ class GenreValidator {
 
   checkDeleteGenre() {
     return [
-      body('genreId')
+      param('genreId')
         .notEmpty(),
       header('Authorization')
     ]
@@ -32,7 +32,7 @@ class GenreValidator {
 
   checkGetByCode() {
     return [
-      body('code')
+      param('code')
         .notEmpty(),
     ]
   }

@@ -14,7 +14,7 @@ router.post(
 )
 
 router.delete(
-  '/delete',
+  '/delete/:userId',
        checkRoleMiddleware.checkRole(['ADMIN']),
        ApplicationValidator.checkDeleteApplication(),
        expressValidatorMiddleware.handleValidationError,

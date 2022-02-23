@@ -1,7 +1,8 @@
 import {
     createApi, fetchBaseQuery
 } from '@reduxjs/toolkit/dist/query/react'
-import { IGenre } from '../models/IGenre'
+import { IAllGenre, IGenre } from '../models/IGenre'
+import { getAccessCookie } from '../utils/cookie'
 
 export const genreAPI = createApi({
     reducerPath: 'genreAPI',
@@ -12,26 +13,49 @@ export const genreAPI = createApi({
             query: ({limit, page, search}) => ({
                 url: `/getAllByPage/?_limit=${limit}&page=${page}&search=${search}`,
                 method: 'GET',
+                headers: {
+                  Authorization: `Bearer ${getAccessCookie()}`,
+                  'cookie': `${getAccessCookie()}`
+                }
             }),
             providesTags: result => ['Genre']
         }),
-   //     loginUser: build.mutation<ILoginUserRes, ILoginUserReq>({
-   //         query: (user) => ({
-   //             url: `/user/login`,
-   //             method: 'POST',
-   //             body: user
-   //         }),
-   //         invalidatesTags: ['Album']
-   //     }),
-   //     refreshUser: build.query<IRefreshUserRes, IRefreshUserReq>({
-   //         query: () => ({
-   //             url: `/user/refresh`,
-   //             method: 'GET',
-   //             headers: {
-   //                 'cookie': `${getRefreshCookie()}`,
-   //             },
-   //         }),
-   //         providesTags: result => ['Album']
-   //     }),
+        getTracksByCode: build.query<IGenre, { code: string}>({
+              query: ({code}) => ({
+                  url: `/getTracksByCode/${code}`,
+                  method: 'GET',
+              }),
+              providesTags: result => ['Genre']
+          }),
+        getAllGenre: build.query<IAllGenre[], ''>({
+            query: () => ({
+                url: `/getAll`,
+                method: 'GET',
+            }),
+            providesTags: result => ['Genre']
+        }),
+        deleteGenre: build.mutation<IGenre, {genreId: number}>({
+            query: ({genreId}) => ({
+                url: `/delete/${genreId}`,
+                method: 'DELETE',
+                headers: {
+                 Authorization: `Bearer ${getAccessCookie()}`,
+                  'cookie': `${getAccessCookie()}`
+                }
+            }),
+            invalidatesTags: result => ['Genre']
+        }),
+        addGenre: build.mutation<IGenre, {name: string, code: string}>({
+          query: (genre) => ({
+            url: `/add`,
+            method: 'POST',
+            body: genre,
+            headers: {
+              Authorization: `Bearer ${getAccessCookie()}`,
+              'cookie': `${getAccessCookie()}`
+            }
+          }),
+         invalidatesTags: result => ['Genre']
+       }),
     })
 })

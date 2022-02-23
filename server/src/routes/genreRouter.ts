@@ -15,7 +15,7 @@ router.post(
 )
 
 router.delete(
-  '/delete',
+  '/delete/:genreId',
         checkRoleMiddleware.checkRole(['ADMIN']),
         GenreValidator.checkDeleteGenre(),
         expressValidatorMiddleware.handleValidationError,
@@ -37,7 +37,7 @@ router.get(
 
 
 router.get(
-  '/getTracksByCode',
+  '/getTracksByCode/:code',
         GenreValidator.checkGetByCode(),
         expressValidatorMiddleware.handleValidationError,
         genreController.getTracks

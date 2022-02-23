@@ -7,6 +7,7 @@ import trackReducer from './reducers/TrackSlice'
 import playerReducer from './reducers/PlayerReducer'
 import favoriteReducer from './reducers/FavoriteSlice'
 import favoriteTrackReducer from './reducers/FavoriteTrackSlice'
+import applicationReducer from './reducers/ApplicationSlice'
 import { userAPI } from '../servicesAPI/UserService'
 import { albumAPI } from '../servicesAPI/AlbumService'
 import { genreAPI } from '../servicesAPI/GenreService'
@@ -14,6 +15,7 @@ import { singerAPI } from '../servicesAPI/SingerService'
 import { trackAPI } from '../servicesAPI/TrackService'
 import { favoriteAPI } from '../servicesAPI/FavoriteService'
 import { favoriteTrackAPI } from '../servicesAPI/FavoriteTrackService'
+import { applicationAPI } from '../servicesAPI/ApplicationService'
 
 const rootReducer = combineReducers({
   userReducer,
@@ -24,6 +26,7 @@ const rootReducer = combineReducers({
   playerReducer,
   favoriteReducer,
   favoriteTrackReducer,
+  applicationReducer,
   [userAPI.reducerPath]: userAPI.reducer,
   [albumAPI.reducerPath]: albumAPI.reducer,
   [genreAPI.reducerPath]: genreAPI.reducer,
@@ -31,6 +34,7 @@ const rootReducer = combineReducers({
   [trackAPI.reducerPath]: trackAPI.reducer,
   [favoriteAPI.reducerPath]: favoriteAPI.reducer,
   [favoriteTrackAPI.reducerPath]: favoriteTrackAPI.reducer,
+  [applicationAPI.reducerPath]: applicationAPI.reducer,
 })
 
 export const setupStore = () => {
@@ -44,6 +48,7 @@ export const setupStore = () => {
       trackAPI.middleware,
       favoriteAPI.middleware,
       favoriteTrackAPI.middleware,
+      applicationAPI.middleware,
     ))
   })
 }

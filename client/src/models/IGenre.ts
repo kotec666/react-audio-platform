@@ -27,3 +27,12 @@ export interface IGenreRows {
 export interface IGenre {
     genre: IGenreRows
 }
+
+
+export interface IAllGenre {
+    id: number
+    name: string
+    code: string
+    createdAt: string
+    updatedAt: string
+}

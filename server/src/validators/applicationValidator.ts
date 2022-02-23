@@ -1,4 +1,4 @@
-import { body, header } from 'express-validator'
+import { body, header, param } from 'express-validator'
 
 class ApplicationValidator {
   checkCreateApplication() {
@@ -13,8 +13,6 @@ class ApplicationValidator {
 
   checkDeleteApplication() {
     return [
-      body('userId')
-        .notEmpty(),
       header('Authorization')
     ]
   }

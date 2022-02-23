@@ -29,6 +29,7 @@ const TracksList = () => {
   }, [location])
 
   // const {data: singerInfo, error, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: singerId})
+  // genreAPI.getTracksByCodeName
 
   return (
     <div className={s.pageWrapper}>

@@ -25,7 +25,7 @@ class GenreService {
   }
 
   async getAllGenre() {
-    const genre = await Genre.findAll()
+    const genre = await Genre.findAll({ order: [['id', 'DESC']]})
     return genre
   }
 

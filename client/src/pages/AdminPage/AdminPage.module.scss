@@ -102,3 +102,58 @@
     background: #C4C4C4;
   }
 }
+
+
+.genresWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+
+  padding: 2% 7% 2% 7%;
+
+  .genreWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    column-gap: 20%;
+    margin: 1rem 0 1rem 0;
+    height: 74px;
+  }
+
+  .name {
+    width: 30%;
+    margin-left: 13%;
+    span {
+      word-break: unset;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10%;
+    width: 70%;
+    flex-wrap: wrap;
+
+    .reject {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3% 8% 3% 8%;
+
+      border: none;
+      outline: none;
+      cursor: pointer;
+
+      font-size: 24px;
+      font-weight: bold;
+
+      color: #FFFFFF;
+      background: #FF6B7F;
+    }
+  }
+}
