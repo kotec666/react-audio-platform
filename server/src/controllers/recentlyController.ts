@@ -25,33 +25,40 @@ class RecentlyController {
 
   async getAllByPage(req: Request, res: Response, next: NextFunction) {
     try {
-      let { _limit, page, search } = req.query
-      const { userId } = req.body
+      let { _limit, page, search, userId } = req.query
+
 
       let offset:number
+      let parsedUserId:number
 
       if (!_limit || !page) {
         return res.json('empty params')
       } else {
         if (search) {
-          if (typeof page === 'string' && typeof _limit === 'string') {
-            offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
-            const recently = await Recently.findAndCountAll({
-              where: { userId: userId },
-              include: [{ model: Track, as: 'userTracksRecently', where: { name: { [Op.like]: `%${search}%` } } }],
-              offset: +offset,
-              limit: +_limit
-            })
-            return res.json({ recently: recently })
+          if (typeof userId === 'string') {
+            parsedUserId = parseInt(userId)
+            if (typeof page === 'string' && typeof _limit === 'string') {
+              offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
+              const recently = await Recently.findAndCountAll({
+                where: { userId: parsedUserId },
+                include: [{ model: Track, as: 'userTracksRecently', where: { name: { [Op.like]: `%${search}%` } } }],
+                offset: +offset,
+                limit: +_limit
+              })
+              return res.json({ recently: recently })
+            }
           }
         } else {
-          if (typeof page === 'string' && typeof _limit === 'string') {
-            offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
-            const recently = await Recently.findAndCountAll({
-              where: { userId: userId },
-              include: [{ model: Track, as: 'userTracksRecently' }], offset: +offset, limit: +_limit
-            })
-            return res.json({ recently: recently })
+          if (typeof userId === 'string') {
+            parsedUserId = parseInt(userId)
+            if (typeof page === 'string' && typeof _limit === 'string') {
+              offset = parseInt(page) * parseInt(_limit) - parseInt(_limit)
+              const recently = await Recently.findAndCountAll({
+                where: { userId: parsedUserId },
+                include: [{ model: Track, as: 'userTracksRecently' }], offset: +offset, limit: +_limit
+              })
+              return res.json({ recently: recently })
+            }
           }
         }
       }

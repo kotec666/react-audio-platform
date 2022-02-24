@@ -37,7 +37,7 @@ router.get(
 
 
 router.get(
-  '/getTracksByCode/:code',
+  '/getTracksByCode',
         GenreValidator.checkGetByCode(),
         expressValidatorMiddleware.handleValidationError,
         genreController.getTracks

@@ -52,11 +52,22 @@ class GenreController {
     }
   }
 
+
   async getTracks(req: Request, res: Response, next: NextFunction) {
     try {
-      const { code } = req.params
-      const tracks = await genreService.getTracksByCode(code)
-      return res.json(tracks)
+      let { _limit, page, search, code } = req.query
+
+      if (!_limit || !page || !code) {
+        return res.json('empty params')
+      } else {
+        if (search) {
+          const genre = await genreService.getTracksByCodePageAndSearch(+_limit, +page, search as string, code as string)
+          return res.json(genre)
+        } else {
+          const genre = await genreService.getTracksByCodePage(+_limit, +page, code as string)
+          return res.json(genre)
+        }
+      }
     } catch (e) {
       next(e)
     }

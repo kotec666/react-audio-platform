@@ -74,9 +74,19 @@ class AlbumController {
 
   async getTracks(req: Request, res: Response, next: NextFunction) {
     try {
-      const { albumId } = req.body
-      const tracks = await albumService.getTracksByAlbumId(+albumId)
-      return res.json(tracks)
+      let { _limit, page, search, albumId } = req.query
+
+      if (!_limit || !page || !albumId) {
+        return res.json('empty params')
+      } else {
+        if (search) {
+          const tracks = await albumService.getTracksByAlbumIdAndSearch(+_limit, +page, +albumId, search as string)
+          return res.json(tracks)
+        } else {
+          const tracks = await albumService.getTracksByAlbumId(+_limit, +page, +albumId)
+          return res.json(tracks)
+        }
+      }
     } catch (e) {
       next(e)
     }

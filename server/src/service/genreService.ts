@@ -59,13 +59,26 @@ class GenreService {
     }
   }
 
-  async getTracksByCode(code: string) {
+  async getTracksByCodePage(_limit: number, page: number, code: string) {
     try {
-      const track = await Genre.findAll({
+      let offset = page * _limit - _limit
+      console.log(page, _limit, code)
+      const genre = await Genre.findAndCountAll({
         where: { code: code },
-        include: [
-          { model: Track, as: 'genreTracks' },
-        ]
+        include: [{ model: Track, as: 'genreTracks' }], offset: +offset, limit: +_limit
+      })
+      return { genre: genre }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async getTracksByCodePageAndSearch(_limit: number, page: number, search: string, code: string) {
+    try {
+      let offset = page * _limit - _limit
+      const track = await Genre.findAndCountAll({
+        where: { code: code },
+        include: [{ model: Track, as: 'genreTracks', where: { name: {[Op.like]: `${search}`} } } ], offset: +offset, limit: +_limit
       })
       return {track: track}
     } catch

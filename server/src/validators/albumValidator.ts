@@ -42,7 +42,7 @@ class AlbumValidator {
 
   checkGetTracksByAlbumId() {
     return [
-      body('albumId')
+      query('albumId')
         .notEmpty(),
     ]
   }

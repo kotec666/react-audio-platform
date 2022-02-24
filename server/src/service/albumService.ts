@@ -1,4 +1,4 @@
-import { Album, Track } from '../models/models'
+import { Album, Genre, Track } from '../models/models'
 import ApiError from '../error/ApiError'
 import path from 'path'
 import * as uuid from 'uuid'
@@ -104,12 +104,29 @@ class AlbumService {
     return album
   }
 
-  async getTracksByAlbumId(albumId: number) {
-    const tracks = await Album.findAll({
-      where: { id: albumId },
-      include: [{ model: Track, as: 'albumTracks' }]
-    })
-    return { tracks: tracks }
+  async getTracksByAlbumId(_limit: number, page: number, albumId: number) {
+    try {
+      let offset = page * _limit - _limit
+      const tracks = await Album.findAndCountAll({
+        include: [{ model: Track, as: 'albumTracks', where: {albumId: albumId } }], offset: +offset, limit: +_limit
+      })
+      return { tracks: tracks }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async getTracksByAlbumIdAndSearch(_limit: number, page: number, albumId: number, search: string) {
+    try {
+      let offset = page * _limit - _limit
+      const track = await Album.findAndCountAll({
+        include: [{ model: Track, as: 'albumTracks', where: { name: {[Op.like]: `${search}`}, albumId: albumId , } } ], offset: +offset, limit: +_limit
+      })
+      return {track: track}
+    } catch
+      (e) {
+      console.log(e)
+    }
   }
 
 }

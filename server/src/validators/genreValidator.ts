@@ -32,7 +32,7 @@ class GenreValidator {
 
   checkGetByCode() {
     return [
-      param('code')
+      query('code')
         .notEmpty(),
     ]
   }
