@@ -21,5 +21,10 @@ router.get(
         recentlyController.getAllByPage
 )
 
+router.get(
+  '/getRecentlyIdByUserId',
+        recentlyController.getRecentlyIdByUserId
+)
+
 
 export default router

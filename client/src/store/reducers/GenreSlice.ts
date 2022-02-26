@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { IAllGenre, IGenre } from '../../models/IGenre'
-import { genreAPI } from '../../servicesAPI/GenreService'
+import { trackAPI } from '../../servicesAPI/TrackService'
 
 
 interface GenreState {
@@ -8,13 +8,15 @@ interface GenreState {
   isLoading: boolean
   error: string
   allGenre: IAllGenre[]
+  codeGenreTracks: IGenre
 }
 
 const initialState: GenreState = {
   genre: { genre: { count: 0, rows: [] } },
   isLoading: false,
   error: '',
-  allGenre: [{id: 0,name: '', code: '',createdAt: '', updatedAt: ''}]
+  allGenre: [{id: 0,name: '', code: '',createdAt: '', updatedAt: ''}],
+  codeGenreTracks: { genre: { count: 0, rows: [] } }
 }
 
 
@@ -24,15 +26,21 @@ export const genreSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addMatcher(
-      genreAPI.endpoints.getGenre.matchFulfilled,
+      trackAPI.endpoints.getGenre.matchFulfilled,
       (state, { payload }) => {
         state.genre.genre = payload.genre
       }
     )
     builder.addMatcher(
-      genreAPI.endpoints.getAllGenre.matchFulfilled,
+      trackAPI.endpoints.getAllGenre.matchFulfilled,
       (state, { payload }) => {
         state.allGenre = payload !== null ? payload : [{id: 0,name: '', code: '',createdAt: '', updatedAt: ''}]
+      }
+    )
+    builder.addMatcher(
+      trackAPI.endpoints.getTracksByCode.matchFulfilled,
+      (state, { payload }) => {
+        state.codeGenreTracks = payload !== null ? payload : { genre: { count: 0, rows: [] } }
       }
     )
   }

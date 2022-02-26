@@ -6,7 +6,7 @@ import { Op } from 'sequelize'
 class GenreService {
 
   async addGenre(name: string, code: string) {
-    const candidate = await Genre.findOne( { where: { name: name, code: code }})
+    const candidate = await Genre.findOne({ where: { name: name, code: code } })
     if (candidate) {
       return ApiError.badRequest('жанр уже существует')
     }
@@ -25,7 +25,7 @@ class GenreService {
   }
 
   async getAllGenre() {
-    const genre = await Genre.findAll({ order: [['id', 'DESC']]})
+    const genre = await Genre.findAll({ order: [['id', 'DESC']] })
     return genre
   }
 
@@ -78,9 +78,16 @@ class GenreService {
       let offset = page * _limit - _limit
       const track = await Genre.findAndCountAll({
         where: { code: code },
-        include: [{ model: Track, as: 'genreTracks', where: { name: {[Op.like]: `${search}`} } } ], offset: +offset, limit: +_limit
+        include: [{
+          model: Track, as: 'genreTracks',
+          where: {
+            name: {
+              [Op.like]: `%${search}%`
+            }
+          }
+        }], offset: +offset, limit: +_limit
       })
-      return {track: track}
+      return { genre: track }
     } catch
       (e) {
       console.log(e)

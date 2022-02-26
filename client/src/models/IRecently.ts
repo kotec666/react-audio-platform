@@ -1,12 +1,12 @@
-export interface ITableFavoriteTrack {
+export interface ITableRecentlyTrack {
     id: number
     createdAt: string
     updatedAt: string
-    favoriteId: number
+    recentlyId: number
     trackId: number
 }
 
-export interface IUserFavoriteTracks {
+export interface IUserRecentlyTracks {
     id: number
     name: string
     streams: number
@@ -16,27 +16,28 @@ export interface IUserFavoriteTracks {
     userId: number
     genreId: number
     albumId: number | null
-    favorite_track: ITableFavoriteTrack
+    recently_track: ITableRecentlyTrack
+
 }
 
-export interface IFavoriteData {
+export interface IRecentlyData {
     id: number
     createdAt: string
     updatedAt: string
     userId: number
-    userTracksFavorite: IUserFavoriteTracks[]
+    userTracksRecently: IUserRecentlyTracks[]
 }
 
-export interface IFavoriteRows {
+export interface IRecentlyRows {
     count: number
-    rows: IFavoriteData[]
+    rows: IRecentlyData[]
 }
 
-export interface IFavorite {
-    favorite: IFavoriteRows
+export interface IRecently {
+    recently: IRecentlyRows
 }
 
-export interface IFavoriteId {
+export interface IRecentlyId {
     id: number
     createdAt: string
     updatedAt: string

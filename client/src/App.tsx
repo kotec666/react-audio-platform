@@ -7,8 +7,7 @@ import { useAppDispatch, useAppSelector } from './hooks/redux'
 import { getAccessCookie, removeAccessCookie, setAccessCookie } from './utils/cookie'
 import { userAPI } from './servicesAPI/UserService'
 import { setUser } from './store/reducers/UserSlice'
-import { favoriteAPI } from './servicesAPI/FavoriteService'
-import { favoriteTrackAPI } from './servicesAPI/FavoriteTrackService'
+import { trackAPI } from './servicesAPI/TrackService'
 
 
 function App() {
@@ -18,16 +17,14 @@ function App() {
   const [getUser] = userAPI.useGetUserMutation()
 
   const {active} = useAppSelector(state => state.playerReducer)
-
   const {user} = useAppSelector(state => state.userReducer)
 
-  favoriteAPI.useGetFavoriteQuery({page: 1, limit: 14, search: '', userId: user ? user.id : 0})
-  favoriteAPI.useGetFavoriteIdQuery({userId: user ? user.id : 0})
+  const {data: favoriteId} = trackAPI.useGetFavoriteIdQuery({userId: user ? user.id : 0})
+  trackAPI.useGetRecentlyIdQuery({userId: user ? user.id : 0})
+  trackAPI.useGetFavoriteTrackQuery({favoriteId: favoriteId ? favoriteId.id : 0})
 
-  const { favoriteId } = useAppSelector(state => state.favoriteReducer)
-
-  favoriteTrackAPI.useGetFavoriteTrackQuery({favoriteId: favoriteId.id})
-
+  // favoriteAPI.useGetFavoriteQuery({page: 1, limit: 1, search: '', userId: user ? user.id : 0})
+  // const { favoriteId } = useAppSelector(state => state.favoriteReducer)
 
   useEffect(() => {
     ( async () => {

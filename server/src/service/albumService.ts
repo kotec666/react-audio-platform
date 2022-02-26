@@ -110,7 +110,7 @@ class AlbumService {
       const tracks = await Album.findAndCountAll({
         include: [{ model: Track, as: 'albumTracks', where: {albumId: albumId } }], offset: +offset, limit: +_limit
       })
-      return { tracks: tracks }
+      return { album: tracks }
     } catch (e) {
       console.log(e)
     }
@@ -120,9 +120,9 @@ class AlbumService {
     try {
       let offset = page * _limit - _limit
       const track = await Album.findAndCountAll({
-        include: [{ model: Track, as: 'albumTracks', where: { name: {[Op.like]: `${search}`}, albumId: albumId , } } ], offset: +offset, limit: +_limit
+        include: [{ model: Track, as: 'albumTracks', where: { name: {[Op.like]: `%${search}%`}, albumId: albumId , } } ], offset: +offset, limit: +_limit
       })
-      return {track: track}
+      return {album: track}
     } catch
       (e) {
       console.log(e)

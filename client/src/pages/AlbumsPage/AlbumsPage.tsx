@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import s from './../../components/TracksList/TracksList.module.scss'
 import Album from '../../components/Album/Album'
 import Pagination from '../../components/Pagination/Pagination'
-import { albumAPI } from '../../servicesAPI/AlbumService'
 import { calculatePagesCount } from '../../hooks/usePagination'
 import { useDebounce } from '../../hooks/useDebounce'
+import { trackAPI } from '../../servicesAPI/TrackService'
 
 const AlbumsPage = () => {
   const pageSize = 8
   const [page, setPage] = useState(1)
   const [searchValue, setSearchValue] = useState('')
   const search = useDebounce(searchValue, 500)
-  const { data: album, isLoading, isError } = albumAPI.useGetAlbumQuery({limit: pageSize, page, search})
+  const { data: album, isLoading, isError } = trackAPI.useGetAlbumQuery({limit: pageSize, page, search})
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)

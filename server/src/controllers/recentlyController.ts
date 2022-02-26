@@ -67,6 +67,16 @@ class RecentlyController {
     }
   }
 
+  async getRecentlyIdByUserId (req: Request, res: Response, next: NextFunction) {
+    const { _userId } = req.query
+    if(!_userId) {
+      return res.json('invalid params')
+    } else {
+      const recentlyId = await Recently.findOne({where: {userId: +_userId}})
+      return res.json(recentlyId)
+    }
+  }
+
 }
 
 export default new RecentlyController()

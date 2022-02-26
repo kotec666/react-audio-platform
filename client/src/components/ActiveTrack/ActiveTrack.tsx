@@ -23,21 +23,21 @@ import {
 } from '../../store/reducers/PlayerReducer'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { isItemAdded } from '../../hooks/useIsAddedCheck'
-import { favoriteTrackAPI } from '../../servicesAPI/FavoriteTrackService'
 import { singerAPI } from '../../servicesAPI/SingerService'
+import { trackAPI } from '../../servicesAPI/TrackService'
 
 let audio: HTMLAudioElement
 
 const ActiveTrack = () => {
-  const { active, pause, duration, currentTime, volume, trackIndex } = useAppSelector(state => state.playerReducer)
+  const { active, pause, duration, currentTime, volume, trackIndex, activeTracks } = useAppSelector(state => state.playerReducer)
 
-  const { track: tracks } = useAppSelector(state => state.trackReducer)
-  const { user } = useAppSelector(state => state.userReducer)
   const dispatch = useAppDispatch()
-  const {favoriteTrack} = useAppSelector(state => state.favoriteTrackReducer)
+
+  const { user } = useAppSelector(state => state.userReducer)
+  const {favoriteTrack} = useAppSelector(state => state.favoriteReducer)
   const {favoriteId} = useAppSelector(state => state.favoriteReducer)
-  const [addFavorite] = favoriteTrackAPI.useAddFavoriteMutation()
-  const [deleteFavorite] = favoriteTrackAPI.useDeleteFavoriteMutation()
+  const [addFavorite] = trackAPI.useAddFavoriteMutation()
+  const [deleteFavorite] = trackAPI.useDeleteFavoriteMutation()
   const {data: singerInfo, error, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: active ? active.userId : 0})
 
 
@@ -46,15 +46,15 @@ const ActiveTrack = () => {
       dispatch(setCurrIndex(trackIndex))
       dispatch(setActiveTrack(active))
     } else {
-      const prevTrack = tracks.track.rows.filter((track, i) => i === trackIndex - 1)
+      const prevTrack = activeTracks.filter((track, i) => i === trackIndex - 1)
       dispatch(setActiveTrack(prevTrack[0]))
       dispatch(setCurrIndex(trackIndex - 1))
     }
   }
 
   const toNextTrack = () => {
-    if (trackIndex < tracks.track.rows.length - 1) {
-      const nextTrack = tracks.track.rows.filter((track, i) => i === trackIndex + 1)
+    if (trackIndex < activeTracks.length - 1) {
+      const nextTrack = activeTracks.filter((track, i) => i === trackIndex + 1)
       dispatch(setCurrIndex(trackIndex + 1))
       dispatch(setActiveTrack(nextTrack[0]))
     } else {
@@ -148,7 +148,7 @@ const ActiveTrack = () => {
             {active && active.name}
           </div>
           <div className={s.trackGroupNameWrapper}>
-            {active && singerInfo && singerInfo.singer[0].pseudonym}
+            {isLoading ? active && singerInfo && singerInfo.singer[0].pseudonym : null}
           </div>
         </div>
         {

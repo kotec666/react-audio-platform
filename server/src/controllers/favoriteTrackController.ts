@@ -22,7 +22,7 @@ class FavoriteTrackController {
   async createFavorite(req: Request, res: Response, next: NextFunction) {
     try {
       const { trackId, favoriteId } = req.body
-      const favorite = favoriteTrackService.create(+trackId, +favoriteId)
+      const favorite = await favoriteTrackService.create(+trackId, +favoriteId)
 
       return res.json(favorite)
     } catch (e) {
@@ -34,7 +34,7 @@ class FavoriteTrackController {
   async deleteFavorite(req: Request, res: Response, next: NextFunction) {
     try {
       const { trackId, favoriteId } = req.body
-      const favorite = favoriteTrackService.deleteOne(+trackId, +favoriteId)
+      const favorite = await favoriteTrackService.deleteOne(+trackId, +favoriteId)
 
       return res.json(favorite)
     } catch (e) {

@@ -44,7 +44,7 @@ class TrackService {
   }
 
   async deleteTrack(trackId: number, user: any) {
-    const track = await Track.findOne({ where: { id: trackId, userId: user.id } })
+    const track = await Track.findOne({ where: { id: trackId } })
     if (!track) {
       throw ApiError.badRequest(`Трека с id: ${trackId} не существует, или трек вам не принадлежит`)
     }

@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import { ITrackData } from '../../models/ITrack'
 
+
 interface PlayerState {
   active: null | ITrackData
   volume: number
@@ -8,6 +9,7 @@ interface PlayerState {
   currentTime: number
   pause: boolean
   trackIndex: number
+  activeTracks: ITrackData[]
 }
 
 const initialState: PlayerState = {
@@ -17,10 +19,11 @@ const initialState: PlayerState = {
   volume: 50,
   pause: true,
   trackIndex: 0,
+  activeTracks: [{ id: 0, name:'', streams: 0, trackAudio: '', createdAt: '', updatedAt: '', userId: 0, genreId: 0, albumId: 0 }],
 }
 
 
-const trackSlice = createSlice({
+const playerSlice = createSlice({
   name: 'track',
   initialState,
   reducers: {
@@ -45,8 +48,11 @@ const trackSlice = createSlice({
     setCurrIndex(state, action) {
       state.trackIndex = action.payload
     },
+    setActiveTracks(state, { payload }) {
+      state.activeTracks =  payload
+    },
   }
 })
 
-export default trackSlice.reducer
-export const {playTrack, pauseTrack, setDuration, setVolume, setCurrentTime, setActiveTrack, setCurrIndex} = trackSlice.actions
+export default playerSlice.reducer
+export const {setActiveTracks, playTrack, pauseTrack, setDuration, setVolume, setCurrentTime, setActiveTrack, setCurrIndex} = playerSlice.actions

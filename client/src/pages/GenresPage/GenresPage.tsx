@@ -3,15 +3,15 @@ import s from './../../components/TracksList/TracksList.module.scss'
 import Genre from '../../components/Genre/Genre'
 import Pagination from '../../components/Pagination/Pagination'
 import { useDebounce } from '../../hooks/useDebounce'
-import { genreAPI } from '../../servicesAPI/GenreService'
 import { calculatePagesCount } from '../../hooks/usePagination'
+import { trackAPI } from '../../servicesAPI/TrackService'
 
 const AlbumsPage = () => {
   const pageSize = 8
   const [page, setPage] = useState(1)
   const [searchValue, setSearchValue] = useState('')
   const search = useDebounce(searchValue, 500)
-  const { data: genre, isLoading, isError } = genreAPI.useGetGenreQuery({ limit: pageSize, page, search })
+  const { data: genre, isLoading, isError } = trackAPI.useGetGenreQuery({ limit: pageSize, page, search })
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)

@@ -1,19 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import s from './HomePage.module.scss'
 import Album from '../../components/Album/Album'
 import Singer from '../../components/Singer/Singer'
 import TrackComponent from '../../components/TrackComponent/TrackComponent'
-import { albumAPI } from '../../servicesAPI/AlbumService'
 import { useDebounce } from '../../hooks/useDebounce'
 import { singerAPI } from '../../servicesAPI/SingerService'
 import { trackAPI } from '../../servicesAPI/TrackService'
+import { useAppDispatch } from '../../hooks/redux'
+import { setActiveTracks } from '../../store/reducers/PlayerReducer'
 
 const HomePage = () => {
+  const dispatch = useAppDispatch()
+
   const pageSize = 8
   const page = 1
   const [searchValue, setSearchValue] = useState('')
   const search = useDebounce(searchValue, 500)
-  const { data: album, isLoading: isLoadingAlbum, isError: isErrorAlbum } = albumAPI.useGetAlbumQuery({limit: pageSize, page, search})
+  const { data: album, isLoading: isLoadingAlbum, isError: isErrorAlbum } = trackAPI.useGetAlbumQuery({limit: pageSize, page, search})
   const { data: singer, isLoading: isLoadingSinger, isError: isErrorSinger } = singerAPI.useGetSingerQuery({ limit: pageSize, page, search })
   const { data: track, isLoading: isLoadingTrack, isError: isErrorTrack } = trackAPI.useGetTrackQuery({ limit: pageSize, page, search })
 
@@ -21,6 +24,9 @@ const HomePage = () => {
     setSearchValue(e.target.value)
   }
 
+  useEffect(() => {
+    dispatch(setActiveTracks(track?.track?.rows))
+  }, [track])
 
   return (
     <div className={s.pageWrapper}>
@@ -30,7 +36,6 @@ const HomePage = () => {
         </div>
 
         <div className={s.searchResults}>
-
           <div className={s.helpText}>
             {album && album.album.count !== 0 ? <span>Альбомы:</span> : null }
           </div>

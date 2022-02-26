@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import trackService from '../service/trackService'
-import jwt from 'jsonwebtoken'
 
 class TrackController {
 

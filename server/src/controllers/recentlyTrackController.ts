@@ -7,7 +7,7 @@ class RecentlyTrackController {
   async createRecently(req: Request, res: Response, next: NextFunction) {
     try {
       const { trackId, recentlyId } = req.body
-      const recently = recentlyTrackService.create(+trackId, +recentlyId)
+      const recently = await recentlyTrackService.create(+trackId, +recentlyId)
 
       return res.json(recently)
     } catch (e) {
@@ -19,7 +19,7 @@ class RecentlyTrackController {
   async deleteRecently(req: Request, res: Response, next: NextFunction) {
     try {
       const { trackId, recentlyId } = req.body
-      const recently = recentlyTrackService.deleteOne(+trackId, +recentlyId)
+      const recently = await recentlyTrackService.deleteOne(+trackId, +recentlyId)
 
       return res.json(recently)
     } catch (e) {

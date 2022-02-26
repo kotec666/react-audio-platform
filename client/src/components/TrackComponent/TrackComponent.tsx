@@ -7,6 +7,7 @@ import {
   setCurrIndex,
   setActiveTrack
 } from '../../store/reducers/PlayerReducer'
+import { trackAPI } from '../../servicesAPI/TrackService'
 
 interface TrackProps {
   id: number
@@ -20,17 +21,31 @@ interface TrackProps {
 }
 
 
-const TrackComponent:React.FC<TrackProps> = ({id, name, index, albumId, genreId, userId, streams, trackAudio}) => {
+const TrackComponent:React.FC<TrackProps> = ({
+      id,
+      name,
+      index,
+      albumId,
+      genreId,
+      userId,
+      streams,
+      trackAudio,
+}) => {
   const dispatch = useAppDispatch()
+  const { recentlyId } = useAppSelector(state => state.recentlyReducer)
+  const [addRecently] = trackAPI.useAddRecentlyMutation()
+
   const Track = {id, name, userId, streams, trackAudio, genreId, albumId}
 
-  const play = () => {
+  const play = async (id: number) => {
     dispatch(setActiveTrack(Track))
     dispatch(pauseTrack())
     dispatch(setCurrIndex(index))
+    await addRecently({ trackId: id, recentlyId: recentlyId.id }).unwrap()
   }
+
   return (
-    <div className={s.trackResult} onClick={play}>
+    <div className={s.trackResult} onClick={() => play(id)}>
       <div className={s.trackWrapper}>
         <div className={s.imgWrapper}>
           <img src={trackIcon} alt="track" />
