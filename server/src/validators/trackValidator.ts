@@ -7,8 +7,6 @@ class TrackValidator {
         .notEmpty(),
       body('userId')
         .notEmpty(),
-      body('genreId')
-        .notEmpty(),
       header('Authorization')
     ]
   }

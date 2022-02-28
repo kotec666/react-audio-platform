@@ -5,14 +5,14 @@ class AlbumController {
 
   async addOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, userId, genreId, albumTracks } = req.body
+      const { name, userId, albumTracks } = req.body
       const files = req.files
 
       if (!files) {
         return res.status(204).json('Загрузите треки плиз')
       }
 
-      const album = await albumService.addAlbum(name, +userId, +genreId, albumTracks, files)
+      const album = await albumService.addAlbum(name, +userId, albumTracks, files)
       return res.json(album)
     } catch (e) {
       next(e)

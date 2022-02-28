@@ -8,11 +8,12 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { singerAPI } from '../../servicesAPI/SingerService'
 import { clearSinger } from '../../store/reducers/SingerSlice'
 import { applicationAPI } from '../../servicesAPI/ApplicationService'
+import { trackAPI } from '../../servicesAPI/TrackService'
+
 
 const ProfilePage = () => {
   const location = useLocation()
   const [isModalOpened, setIsModalOpened] = useState(false)
-  const [isCurrentUserPage, setIsCurrentUserPage] = useState(false)
   const [singerId, setSingerId] = useState(0)
   const [applicationPseudonym, setApplicationPseudonym] = useState('')
 
@@ -53,6 +54,62 @@ const ProfilePage = () => {
   const changeApplicationPseudonym = (e: React.ChangeEvent<HTMLInputElement>) => {
     setApplicationPseudonym(e.target.value)
   }
+
+  const [albumName, setAlbumName] = useState('')
+  const [info, setInfo] = useState([{ name: '', genreId: 0, number: 0 }])
+  const [files, setFiles] = useState<FileList>()
+  const [addAlbum] = trackAPI.useAddAlbumMutation()
+  const [addTrack] = trackAPI.useAddTrackMutation()
+
+  const { data: allGenre } = trackAPI.useGetAllGenreQuery('')
+
+  const onSubmitAlbumForm = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (files) {
+      const albumData = new FormData()
+      albumData.append('name', albumName)
+      albumData.append('userId', `${user.id}`)
+      for (let i = 0; i<files.length; i++) {
+        albumData.append('trackAudio', files[i])
+      }
+      albumData.append('albumTracks', JSON.stringify(info))
+      await addAlbum(albumData)
+    }
+  }
+
+  const onSubmitTrackForm = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (files) {
+      const trackData = new FormData()
+      trackData.append('userId', `${user.id}`)
+      for (let i = 0; i<files.length; i++) {
+        trackData.append('trackAudio', files[i])
+      }
+      trackData.append('trackInfo', JSON.stringify(info))
+      await addTrack(trackData)
+    }
+  }
+
+  const addInfo = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setInfo([...info, {name: '', genreId: 0, number: Date.now()}])
+  }
+
+  const removeInfo = (e: React.MouseEvent, number: number) => {
+    e.preventDefault()
+    setInfo(info.filter(i => i.number !== number))
+  }
+
+  const changeInfo = (key: string, value: string, number: number) => {
+    setInfo(info.map(i => i.number === number ? {...i, [key]: value} : i))
+  }
+
+  const selectFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.target.files ? setFiles(e.target.files) : null
+  }
+
 
   return (
     <div className={s.pageWrapper}>
@@ -101,7 +158,6 @@ const ProfilePage = () => {
 
                     <div className={s.modalBtn}>
                       {
-
                           singerInfo && user.id === singerInfo?.singer[0]?.id
                             ?
                                 <button
@@ -114,36 +170,52 @@ const ProfilePage = () => {
                       }
 
                       <Modal isOpened={isModalOpened} setIsOpened={setIsModalOpened} title={'Загрузка'} >
-                        <form className={s.uploadAlbum}>
+                        <form className={s.uploadAlbum} onSubmit={onSubmitAlbumForm}>
                           <span className={s.uploadText}>Загрузка альбома</span>
                           <div className={s.inputBlockAlbum}>
                             <label htmlFor='albumName'>Название альбома</label>
-                            <input type="text" id={'albumName'}/>
+                            <input type="text" id={'albumName'} value={albumName} onChange={(e) => setAlbumName(e.target.value)} />
                           </div>
 
                           <div className={s.inputBlockAlbumTrack}>
                             <label htmlFor='trackName'>Название трека</label>
 
-                            <div className={s.inputAndButtonsTrack}>
-                              <input type="text" id={'trackName'}/>
-                              <button className={s.plusBtn}>+</button>
-                              <button className={s.minusBtn}>-</button>
-                            </div>
-
-                            <div className={s.inputAndButtonsTrack}>
-                              <input type="text" id={'trackName'}/>
-                              <button className={s.plusBtn}>+</button>
-                              <button className={s.minusBtn}>-</button>
-                            </div>
+                            {info.map(i => {
+                              return (
+                                <div key={i.number} className={s.inputAndButtonsTrack}>
+                                  <input
+                                    type="text"
+                                    id={'trackName'}
+                                    value={i.name}
+                                    onChange={(e) => changeInfo('name', e.target.value, i.number)}
+                                    placeholder={'Введите название трека'}
+                                  />
+                                  <button
+                                    className={s.plusBtn}
+                                    onClick={addInfo}
+                                  >+</button>
+                                  <button
+                                    className={s.minusBtn}
+                                    onClick={(e) => removeInfo(e, i.number)}
+                                  >-</button>
+                                </div>
+                              )
+                            })}
 
                           </div>
 
-                          <select>
-                            <option value="">hip-hop</option>
-                            <option value="">hop-hip-hop</option>
-                            <option value="">backback</option>
-                          </select>
-
+                          {info.map(i => {
+                            return (
+                              <select key={i.number} onChange={(e) => changeInfo('genreId', e.target.value, i.number)}>
+                                {
+                                  allGenre && allGenre.map(genre => {
+                                    return <option key={genre.id} value={genre.id}>{genre.name}</option>
+                                  })
+                                }
+                              </select>
+                            )
+                           })
+                          }
                           <label
                             htmlFor="chooseFileBtn"
                             className={s.chooseFileBtn}
@@ -154,41 +226,61 @@ const ProfilePage = () => {
                             style={{display: 'none'}}
                             type="file"
                             id="chooseFileBtn"
+                            multiple
+                            onChange={(e) => selectFiles(e)}
                           />
 
                           <button
                             className={s.chooseFileBtn}
+                            type="submit"
                           >
                             Загрузить
                           </button>
 
                         </form>
 
-                        <form className={s.uploadAlbum}>
+                        <form className={s.uploadAlbum} onSubmit={onSubmitTrackForm}>
                           <span className={s.uploadText}>Загрузка трека</span>
 
                           <div className={s.inputBlockAlbumTrack}>
                             <label htmlFor='uploadTrackName'>Название трека</label>
 
-                            <div className={s.inputAndButtonsTrack}>
-                              <input type="text" id={'uploadTrackName'}/>
-                              <button className={s.plusBtn}>+</button>
-                              <button className={s.minusBtn}>-</button>
-                            </div>
-
-                            <div className={s.inputAndButtonsTrack}>
-                              <input type="text" id={'uploadTrackName'}/>
-                              <button className={s.plusBtn}>+</button>
-                              <button className={s.minusBtn}>-</button>
-                            </div>
+                            {info.map(i => {
+                              return (
+                                <div key={i.number} className={s.inputAndButtonsTrack}>
+                                  <input
+                                    type="text"
+                                    id={'uploadTrackName'}
+                                    value={i.name}
+                                    onChange={(e) => changeInfo('name', e.target.value, i.number)}
+                                    placeholder={'Введите название трека'}
+                                  />
+                                  <button
+                                    className={s.plusBtn}
+                                    onClick={addInfo}
+                                  >+</button>
+                                  <button
+                                    className={s.minusBtn}
+                                    onClick={(e) => removeInfo(e, i.number)}
+                                  >-</button>
+                                </div>
+                              )
+                            })}
 
                           </div>
 
-                          <select>
-                            <option value="">hip-hop</option>
-                            <option value="">hop-hip-hop</option>
-                            <option value="">backback</option>
-                          </select>
+                          {info.map(i => {
+                            return (
+                              <select key={i.number} onChange={(e) => changeInfo('genreId', e.target.value, i.number)}>
+                                {
+                                  allGenre && allGenre.map(genre => {
+                                    return <option key={genre.id} value={genre.id}>{genre.name}</option>
+                                  })
+                                }
+                              </select>
+                            )
+                          })
+                          }
 
                           <label
                             htmlFor="chooseTrackFileBtn"
@@ -196,14 +288,18 @@ const ProfilePage = () => {
                           >
                             Выбрать файл
                           </label>
+
                           <input
                             style={{display: 'none'}}
                             type="file"
                             id="chooseTrackFileBtn"
+                            multiple
+                            onChange={(e) => selectFiles(e)}
                           />
 
                           <button
                             className={s.chooseFileBtn}
+                            type="submit"
                           >
                             Загрузить
                           </button>

@@ -3,44 +3,36 @@ import ApiError from '../error/ApiError'
 import * as uuid from 'uuid'
 import path from 'path'
 import { Op } from 'sequelize'
+import { ITrack } from './albumService'
 
 
 class TrackService {
 
-  async addTrack(trackInfo: any, files: any, userId: number, genreId: number) {
+  async addTrack(trackInfo: any, files: any, userId: number) {
 
     const generateName = () => {
       return uuid.v4() + '.mp3'
     }
 
-    const uploadFiles = async (fileName: string) => {
-      if (files.trackAudio) {
-        for (const j of files.trackAudio) {
-          await j.mv(path.resolve(__dirname, '..', 'static', fileName))
-        }
-      }
-    }
-
-
     let tracks = JSON.parse(trackInfo)
-    for (const i of tracks) {
+    tracks.forEach((track:ITrack, i: number) => {
 
       let fileName = generateName()
 
-      await Track.create({
-        name: i.name,
+       Track.create({
+        name: track.name,
         streams: 0,
         trackAudio: fileName,
         albumId: null,
         userId: userId,
-        genreId: genreId
+        genreId: track.genreId
       })
 
-      await uploadFiles(fileName)
+        files.trackAudio[i].mv(path.resolve(__dirname, '..', 'static', fileName))
 
-    }
+    })
 
-    return { status: 201 }
+    return { track: 'track' }
   }
 
   async deleteTrack(trackId: number, user: any) {

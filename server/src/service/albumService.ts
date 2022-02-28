@@ -1,47 +1,42 @@
-import { Album, Genre, Track } from '../models/models'
+import { Album, Track } from '../models/models'
 import ApiError from '../error/ApiError'
 import path from 'path'
 import * as uuid from 'uuid'
 import { Op } from 'sequelize'
 
-
-
+export interface ITrack {
+  name: string
+  genreId: number
+  number: number
+}
 
 class AlbumService {
 
-  async addAlbum(name: string, userId: number, genreId: number, albumTracks: any, files:any) {
+  async addAlbum(name: string, userId: number, albumTracks: any, files:any) {
     const album = await Album.create({ name, userId })
 
     const generateName = () => {
       return uuid.v4() + '.mp3'
     }
 
-    const uploadFiles = async (fileName: string) => {
-
-      if (files.trackAudio) {
-        for (const j of files.trackAudio) {
-          await j.mv(path.resolve(__dirname, '..', 'static', fileName))
-        }
-      }
-    }
 
     let albumInfo = JSON.parse(albumTracks)
-    for (const i of albumInfo) {
+    albumInfo.forEach((track: ITrack, i: number) => {
 
       let fileName = generateName()
 
-      await Track.create({
-        name: i.name,
+      Track.create({
+        name: track.name,
         streams: 0,
         trackAudio: fileName,
         albumId: album.id,
         userId: userId,
-        genreId: genreId
+        genreId: track.genreId
       })
 
-      await uploadFiles(fileName)
+      files.trackAudio[i].mv(path.resolve(__dirname, '..', 'static', fileName))
 
-    }
+    })
 
     return { album: album }
   }

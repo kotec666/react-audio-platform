@@ -7,6 +7,7 @@ import { useAppSelector } from '../../hooks/redux'
 import TrackListComponent from './TrackListComponent'
 import { useDebounce } from '../../hooks/useDebounce'
 import { trackAPI } from '../../servicesAPI/TrackService'
+import { calculatePagesCount } from '../../hooks/usePagination'
 
 
 const TracksList = () => {
@@ -16,34 +17,17 @@ const TracksList = () => {
   const [currentPath, setCurrentPath] = useState('')
   const [genreCode, setGenreCode] = useState('')
   const [activeAlbumId, setActiveAlbumId] = useState(0)
+  const [pagesCount, setPagesCount] = useState(0)
+  const [albumTracksCount, setAlbumTracksCount] = useState(0)
+  const [genreTracksCount, setGenreTracksCount] = useState(0)
+  const [recentlyTracksCount, setRecentlyTracksCount] = useState(0)
+  const [favoriteTracksCount, setFavoriteTracksCount] = useState(0)
 
   const pageSize = 14
   const [page, setPage] = useState(1)
 
   const [searchValue, setSearchValue] = useState('')
   const search = useDebounce(searchValue, 500)
-
-  useEffect(() => {
-    const currentPath = location.pathname.split('/')
-    console.log('curPath: ' + currentPath[1])
-    setCurrentPath(currentPath[1])
-    if (currentPath[1] === FAVORITE_ROUTE.slice(1)) {
-      console.log('favorite')
-    }
-    if (currentPath[1] === RECENTLY_ROUTE.slice(1)) {
-      console.log('recently')
-    }
-    if (currentPath[1] === GENRE_ROUTE.slice(1)) {
-      setGenreCode(currentPath[2])
-    }
-    if (currentPath[1] === ALBUM_ROUTE.slice(1)) {
-      console.log('albums ' + currentPath[2])
-      setActiveAlbumId(+currentPath[2])
-    }
-  }, [location])
-
-  const [addFavorite] = trackAPI.useAddFavoriteMutation()
-  const [deleteFavorite] = trackAPI.useDeleteFavoriteMutation()
 
   const { data: favorite } = trackAPI.useGetFavoriteQuery({
     page: page,
@@ -74,6 +58,49 @@ const TracksList = () => {
     page: page,
     search: search
   })
+
+  useEffect(() => {
+      albumTracks ? setAlbumTracksCount(albumTracks?.album?.count) : null
+  }, [albumTracks])
+
+  useEffect(() => {
+      favorite ? setFavoriteTracksCount(favorite?.favorite?.count) : null
+  }, [favorite])
+
+  useEffect(() => {
+      recently ? setRecentlyTracksCount(recently?.recently?.count) : null
+  }, [recently])
+
+  useEffect(() => {
+      codeGenreTracks ? setGenreTracksCount(codeGenreTracks?.genre?.count) : null
+  }, [codeGenreTracks])
+
+  useEffect(() => {
+    const currentPath = location.pathname.split('/')
+    console.log('curPath: ' + currentPath[1])
+    setCurrentPath(currentPath[1])
+
+    if (currentPath[1] === FAVORITE_ROUTE.slice(1)) {
+      console.log('favorite')
+      setPagesCount(calculatePagesCount(pageSize, favoriteTracksCount))
+    }
+    if (currentPath[1] === RECENTLY_ROUTE.slice(1)) {
+      console.log('recently')
+      setPagesCount(calculatePagesCount(pageSize, recentlyTracksCount))
+    }
+    if (currentPath[1] === GENRE_ROUTE.slice(1)) {
+      setGenreCode(currentPath[2])
+      setPagesCount(calculatePagesCount(pageSize, genreTracksCount))
+    }
+    if (currentPath[1] === ALBUM_ROUTE.slice(1)) {
+      console.log('albums ' + currentPath[2])
+      setActiveAlbumId(+currentPath[2])
+      setPagesCount(calculatePagesCount(pageSize, albumTracksCount))
+    }
+  }, [location])
+
+  const [addFavorite] = trackAPI.useAddFavoriteMutation()
+  const [deleteFavorite] = trackAPI.useDeleteFavoriteMutation()
 
   const { favoriteId } = useAppSelector(state => state.favoriteReducer)
 
@@ -200,7 +227,7 @@ const TracksList = () => {
         </div>
 
         <div className={s.paginationWrapper}>
-          {/*<Pagination pages={[1,2,3,4,5]} />*/}
+          <Pagination page={page} pagesCount={pagesCount} setPage={setPage} />
         </div>
       </div>
     </div>

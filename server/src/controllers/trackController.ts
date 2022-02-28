@@ -5,10 +5,10 @@ class TrackController {
 
   async addOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const { trackInfo, userId, genreId } = req.body
+      const { trackInfo, userId } = req.body
       const files = req.files
 
-      const track = await trackService.addTrack(trackInfo, files, +userId, +genreId)
+      const track = await trackService.addTrack(trackInfo, files, +userId)
       return res.json(track)
     } catch (e) {
       next(e)

@@ -33,6 +33,18 @@ export const trackAPI = createApi({
             }),
             invalidatesTags: result => ['Track', 'Favorite', 'FavoriteTrack', 'Recently', 'RecentlyTrack', 'Album', 'AlbumTracks', 'Genre']
         }),
+        addTrack: build.mutation<ITrack, FormData>({
+            query: (trackData) => ({
+                url: `/track/add`,
+                method: 'POST',
+                body: trackData,
+                headers: {
+                    Authorization: `Bearer ${getAccessCookie()}`,
+                    'cookie': `${getAccessCookie()}`
+                }
+            }),
+            invalidatesTags: result => ['Track']
+        }),
         getFavorite: build.query<IFavorite, { limit: number, page: number, search: string, userId: number}>({
             query: ({limit, page, search, userId}) => ({
                 url: `/favorite/getAllByPage/?_limit=${limit}&page=${page}&userId=${userId}&search=${search}`,
@@ -130,6 +142,18 @@ export const trackAPI = createApi({
                 },
             }),
             invalidatesTags: ['Recently', 'RecentlyTrack']
+        }),
+        addAlbum: build.mutation<IAlbum, FormData>({
+            query: (albumData) => ({
+                url: `/album/add`,
+                method: 'POST',
+                body: albumData,
+                headers: {
+                    Authorization: `Bearer ${getAccessCookie()}`,
+                    'cookie': `${getAccessCookie()}`
+                }
+            }),
+            invalidatesTags: result => ['Album']
         }),
         getAlbum: build.query<IAlbum, { limit: number, page: number, search: string}>({
             query: ({limit, page, search}) => ({
