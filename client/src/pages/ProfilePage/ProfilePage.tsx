@@ -9,6 +9,7 @@ import { singerAPI } from '../../servicesAPI/SingerService'
 import { clearSinger } from '../../store/reducers/SingerSlice'
 import { applicationAPI } from '../../servicesAPI/ApplicationService'
 import { trackAPI } from '../../servicesAPI/TrackService'
+import Loader from '../../components/Loader/Loader'
 
 
 const ProfilePage = () => {
@@ -28,7 +29,7 @@ const ProfilePage = () => {
     const userId = id
 
    if (isProfile === 'profile') {
-       setSingerId(user.id)
+       setSingerId(user ? user.id : 0)
    } else {
      if (!userId) {
        setSingerId(user.id)
@@ -44,7 +45,7 @@ const ProfilePage = () => {
   }, [id])
 
   const {data: singerInfo, error: SingerError, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: singerId})
-  const [sendApplication,  { error: ApplicationError } ] = applicationAPI.useSendApplicationMutation()
+  const [sendApplication,  { error: ApplicationError, isLoading: isLoadingApplication  }  ] = applicationAPI.useSendApplicationMutation()
 
   const submitApplicationHandler = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,37 +59,50 @@ const ProfilePage = () => {
   const [albumName, setAlbumName] = useState('')
   const [info, setInfo] = useState([{ name: '', genreId: 0, number: 0 }])
   const [files, setFiles] = useState<FileList>()
-  const [addAlbum] = trackAPI.useAddAlbumMutation()
-  const [addTrack] = trackAPI.useAddTrackMutation()
+  const [equalsError, setEqualsError] = useState('')
+  const [addAlbum, { isLoading: isLoadingAddAlbum } ] = trackAPI.useAddAlbumMutation()
+  const [addTrack, { isLoading: isLoadingAddTrack } ] = trackAPI.useAddTrackMutation()
 
   const { data: allGenre } = trackAPI.useGetAllGenreQuery('')
 
   const onSubmitAlbumForm = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (files) {
-      const albumData = new FormData()
-      albumData.append('name', albumName)
-      albumData.append('userId', `${user.id}`)
-      for (let i = 0; i<files.length; i++) {
-        albumData.append('trackAudio', files[i])
-      }
-      albumData.append('albumTracks', JSON.stringify(info))
-      await addAlbum(albumData)
+      if (files) {
+        if (files.length === info.length) {
+          setEqualsError('')
+        const albumData = new FormData()
+        albumData.append('name', albumName)
+        albumData.append('userId', `${user.id}`)
+        for (let i = 0; i < files.length; i++) {
+          albumData.append('trackAudio', files[i])
+        }
+        albumData.append('albumTracks', JSON.stringify(info))
+        await addAlbum(albumData)
+        setIsModalOpened(false)
+      } else {
+          setEqualsError('количество выбранных треков не соответствует количеству информации о них')
+        }
     }
   }
 
   const onSubmitTrackForm = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (files) {
-      const trackData = new FormData()
-      trackData.append('userId', `${user.id}`)
-      for (let i = 0; i<files.length; i++) {
-        trackData.append('trackAudio', files[i])
-      }
-      trackData.append('trackInfo', JSON.stringify(info))
-      await addTrack(trackData)
+      if (files) {
+        if (files.length === info.length) {
+          setEqualsError('')
+        const trackData = new FormData()
+        trackData.append('userId', `${user.id}`)
+        for (let i = 0; i<files.length; i++) {
+          trackData.append('trackAudio', files[i])
+        }
+        trackData.append('trackInfo', JSON.stringify(info))
+        await addTrack(trackData)
+        setIsModalOpened(false)
+      } else {
+          setEqualsError('количество выбранных треков не соответствует количеству информации о них')
+        }
     }
   }
 
@@ -128,8 +142,31 @@ const ProfilePage = () => {
                 <hr/>
                 <form onSubmit={submitApplicationHandler}>
                   {ApplicationError ? JSON.stringify(ApplicationError) : null}
-                  <input type="text" placeholder={'Творческий псевдоним...'} onChange={changeApplicationPseudonym} value={applicationPseudonym}/>
-                  {user && user.isActivated ? <button>Отправить</button> : <div>Подтвердите почту, перед тем, как отправлять заявку</div>}
+                  <input
+                    type="text"
+                    placeholder={'Творческий псевдоним...'}
+                    onChange={changeApplicationPseudonym}
+                    value={applicationPseudonym}
+                    required={true}
+                  />
+                  {
+                    user && user.isActivated ?
+                    <
+                      button
+                      type='submit'
+                      className={s.loadingBtn}
+                      disabled={isLoadingApplication}
+                    >
+                      {isLoadingApplication
+                        ?
+                        'Загрузка...'
+                        :
+                        'Отправить'
+                      }
+                    </button>
+                    :
+                    <div>Подтвердите почту, перед тем, как отправлять заявку</div>
+                  }
                 </form>
               </div>
               <div>
@@ -145,7 +182,7 @@ const ProfilePage = () => {
                       }
                     </div>
                   {
-                   singerInfo && user.id === singerInfo?.singer[0]?.id
+                   singerInfo && user && user.id === singerInfo?.singer[0]?.id
                       ? <div className={s.singerInfo}>
                           <span>Логин: {user.login}</span>
                           <span>Статус: {user.role}</span>
@@ -171,10 +208,15 @@ const ProfilePage = () => {
 
                       <Modal isOpened={isModalOpened} setIsOpened={setIsModalOpened} title={'Загрузка'} >
                         <form className={s.uploadAlbum} onSubmit={onSubmitAlbumForm}>
+                          <span style={{color: 'red'}}>{equalsError && equalsError}</span>
                           <span className={s.uploadText}>Загрузка альбома</span>
                           <div className={s.inputBlockAlbum}>
                             <label htmlFor='albumName'>Название альбома</label>
-                            <input type="text" id={'albumName'} value={albumName} onChange={(e) => setAlbumName(e.target.value)} />
+                            <input
+                              type="text" id={'albumName'}
+                              value={albumName}
+                              onChange={(e) => setAlbumName(e.target.value)}
+                              required={true} />
                           </div>
 
                           <div className={s.inputBlockAlbumTrack}>
@@ -189,6 +231,7 @@ const ProfilePage = () => {
                                     value={i.name}
                                     onChange={(e) => changeInfo('name', e.target.value, i.number)}
                                     placeholder={'Введите название трека'}
+                                    required={true}
                                   />
                                   <button
                                     className={s.plusBtn}
@@ -201,12 +244,15 @@ const ProfilePage = () => {
                                 </div>
                               )
                             })}
-
                           </div>
 
                           {info.map(i => {
                             return (
-                              <select key={i.number} onChange={(e) => changeInfo('genreId', e.target.value, i.number)}>
+                              <select
+                                key={i.number}
+                                onChange={(e) => changeInfo('genreId', e.target.value, i.number)}
+                                required={true}
+                              >
                                 {
                                   allGenre && allGenre.map(genre => {
                                     return <option key={genre.id} value={genre.id}>{genre.name}</option>
@@ -228,18 +274,26 @@ const ProfilePage = () => {
                             id="chooseFileBtn"
                             multiple
                             onChange={(e) => selectFiles(e)}
+                            required={true}
                           />
 
                           <button
                             className={s.chooseFileBtn}
                             type="submit"
+                            disabled={isLoadingAddAlbum}
                           >
-                            Загрузить
+                            {isLoadingAddAlbum
+                              ?
+                              'Загрузка...'
+                              :
+                              'Загрузить'
+                            }
                           </button>
 
                         </form>
 
                         <form className={s.uploadAlbum} onSubmit={onSubmitTrackForm}>
+                          <span style={{color: 'red'}}>{equalsError && equalsError}</span>
                           <span className={s.uploadText}>Загрузка трека</span>
 
                           <div className={s.inputBlockAlbumTrack}>
@@ -300,8 +354,13 @@ const ProfilePage = () => {
                           <button
                             className={s.chooseFileBtn}
                             type="submit"
+                            disabled={isLoadingAddTrack}
                           >
-                            Загрузить
+                            {
+                              isLoadingAddTrack
+                              ? 'Загрузка...'
+                              : 'Загрузить'
+                            }
                           </button>
 
                         </form>
@@ -315,6 +374,10 @@ const ProfilePage = () => {
                         </div>
                         <div className={s.AlbumsWrapper}>
                           {
+                          isLoading && isLoading ? Array(6)
+                              .fill(0)
+                              .map((_, index) => <Loader key={`${_}${index}`} />)
+                            :
                            singerInfo && singerInfo.singer.map(elem => {
                                     return (
                                       elem.userAlbums.map(album => {
@@ -333,6 +396,10 @@ const ProfilePage = () => {
                     <div className={s.TracksWrapper}>
 
                       {
+                      isLoading && isLoading ? Array(6)
+                          .fill(0)
+                          .map((_, index) => <Loader key={`${_}${index}`} />)
+                        :
                       singerInfo && singerInfo.singer.map(elem => {
                           return (
                             elem.userTracks.map((track, index) => {

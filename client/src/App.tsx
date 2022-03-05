@@ -14,23 +14,17 @@ function App() {
   const dispatch = useAppDispatch()
   const {accessToken} = useAppSelector(state => state.userReducer)
 
-  const [getUser] = userAPI.useGetUserMutation()
+   userAPI.useGetUserQuery('')
 
   const {active} = useAppSelector(state => state.playerReducer)
   const {user} = useAppSelector(state => state.userReducer)
 
-  const {data: favoriteId} = trackAPI.useGetFavoriteIdQuery({userId: user ? user.id : 0})
-  trackAPI.useGetRecentlyIdQuery({userId: user ? user.id : 0})
+  const {data: favoriteId} = trackAPI.useGetFavoriteIdQuery({userId: user?.id})
+  trackAPI.useGetRecentlyIdQuery({userId: user?.id})
   trackAPI.useGetFavoriteTrackQuery({favoriteId: favoriteId ? favoriteId.id : 0})
 
   // favoriteAPI.useGetFavoriteQuery({page: 1, limit: 1, search: '', userId: user ? user.id : 0})
   // const { favoriteId } = useAppSelector(state => state.favoriteReducer)
-
-  useEffect(() => {
-    ( async () => {
-      await getUser('')
-    })()
-  }, [])
 
   useEffect(() => {
     const accessCookie = getAccessCookie()

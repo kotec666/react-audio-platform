@@ -15,24 +15,42 @@ class TrackService {
     }
 
     let tracks = JSON.parse(trackInfo)
-    tracks.forEach((track:ITrack, i: number) => {
 
+    if (tracks.length === 1) {
       let fileName = generateName()
 
-       Track.create({
-        name: track.name,
+     await Track.create({
+        name: tracks[0].name,
         streams: 0,
         trackAudio: fileName,
         albumId: null,
         userId: userId,
-        genreId: track.genreId
+        genreId: tracks[0].genreId
       })
+
+       await files.trackAudio.mv(path.resolve(__dirname, '..', 'static', fileName))
+
+      return { track: 'track' }
+    } else {
+      tracks.forEach((track:ITrack, i: number) => {
+
+        let fileName = generateName()
+
+        Track.create({
+          name: track.name,
+          streams: 0,
+          trackAudio: fileName,
+          albumId: null,
+          userId: userId,
+          genreId: track.genreId
+        })
 
         files.trackAudio[i].mv(path.resolve(__dirname, '..', 'static', fileName))
 
-    })
+      })
 
-    return { track: 'track' }
+      return { track: 'track' }
+    }
   }
 
   async deleteTrack(trackId: number, user: any) {

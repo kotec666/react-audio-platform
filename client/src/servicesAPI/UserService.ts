@@ -12,7 +12,6 @@ import {
 } from '../models/IUser'
 import { getRefreshCookie } from '../utils/cookie'
 import { baseQueryWithReauth } from './UnauthorizedInterceptor'
-import { IFavorite } from '../models/IFavorite'
 
 // baseQuery: fetchBaseQuery({baseUrl: BASE_URL, prepareHeaders(headers) {return headers}, credentials: 'include'}),
 
@@ -71,10 +70,10 @@ export const userAPI = createApi({
             }),
             invalidatesTags: ['User']
         }),
-        getUser: build.mutation<IUser, ''>({
+        getUser: build.query<IUser, ''>({
             query: () => ({
                 url: `/user/login/success`,
-                method: 'get',
+                method: 'GET',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
@@ -82,7 +81,7 @@ export const userAPI = createApi({
                     'cookie': `${getRefreshCookie()}`,
                 },
             }),
-            invalidatesTags: ['User']
+            providesTags: ['User']
         }),
         refreshUser: build.query<IRefreshUserRes, IRefreshUserReq>({
             query: () => ({

@@ -8,6 +8,7 @@ import TrackListComponent from './TrackListComponent'
 import { useDebounce } from '../../hooks/useDebounce'
 import { trackAPI } from '../../servicesAPI/TrackService'
 import { calculatePagesCount } from '../../hooks/usePagination'
+import RecentlyAndFavoriteLoader from '../RecentlyAndFavoriteLoader/RecentlyAndFavoriteLoader'
 
 
 const TracksList = () => {
@@ -29,7 +30,7 @@ const TracksList = () => {
   const [searchValue, setSearchValue] = useState('')
   const search = useDebounce(searchValue, 500)
 
-  const { data: favorite } = trackAPI.useGetFavoriteQuery({
+  const { data: favorite, isLoading: isLoadingFavorite } = trackAPI.useGetFavoriteQuery({
     page: page,
     limit: pageSize,
     search: search,
@@ -38,21 +39,21 @@ const TracksList = () => {
 
   const { favoriteTrack } = useAppSelector(state => state.favoriteReducer)
 
-  const { data: recently } = trackAPI.useGetRecentlyQuery({
+  const { data: recently, isLoading: isLoadingRecently, } = trackAPI.useGetRecentlyQuery({
     page: page,
     limit: pageSize,
     search: search,
     userId: user ? user.id : 0
   })
 
-  const { data: codeGenreTracks } = trackAPI.useGetTracksByCodeQuery({
+  const { data: codeGenreTracks, isLoading: isLoadingCodeGenreTracks } = trackAPI.useGetTracksByCodeQuery({
     page: page,
     limit: pageSize,
     code: genreCode,
     search: search
   })
 
-  const { data: albumTracks } = trackAPI.useGetTracksByAlbumIdQuery({
+  const { data: albumTracks, isLoading: isLoadingAlbumTracks } = trackAPI.useGetTracksByAlbumIdQuery({
     albumId: activeAlbumId,
     limit: pageSize,
     page: page,
@@ -147,7 +148,10 @@ const TracksList = () => {
         <div className={s.trackListWrapper}>
           {
             currentPath === `${FAVORITE_ROUTE.slice(1)}`
-              ? favorite && favorite?.favorite?.rows.map((item) => {
+              ? isLoadingFavorite && isLoadingFavorite ? Array(6)
+                .fill(0)
+                .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
+              : favorite && favorite?.favorite?.rows.map((item) => {
               return (
                 item && item?.userTracksFavorite.map((row, index) => {
                     return (
@@ -166,7 +170,10 @@ const TracksList = () => {
               )
             })
               : currentPath === `${RECENTLY_ROUTE.slice(1)}`
-              ? recently && recently?.recently?.rows.map((item) => {
+              ? isLoadingRecently && isLoadingRecently ? Array(6)
+                .fill(0)
+                .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
+               : recently && recently?.recently?.rows.map((item) => {
                 return (
                   item && item?.userTracksRecently.map((row, index) => {
                       return (
@@ -185,7 +192,10 @@ const TracksList = () => {
                 )
               })
               : currentPath === `${ALBUM_ROUTE.slice(1)}`
-                ? albumTracks && albumTracks?.album?.rows.map((item) => {
+                ? isLoadingAlbumTracks && isLoadingAlbumTracks ? Array(6)
+                    .fill(0)
+                    .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
+                  : albumTracks && albumTracks?.album?.rows.map((item) => {
                   return (
                     item && item?.albumTracks.map((row, index) => {
                         return (
@@ -204,7 +214,10 @@ const TracksList = () => {
                   )
                 })
                 : currentPath === `${GENRE_ROUTE.slice(1)}`
-                  ? codeGenreTracks && codeGenreTracks?.genre?.rows.map((item) => {
+                ? isLoadingCodeGenreTracks && isLoadingCodeGenreTracks ? Array(6)
+                   .fill(0)
+                   .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
+                 : codeGenreTracks && codeGenreTracks?.genre?.rows.map((item) => {
                   return (
                     item && item?.genreTracks.map((row, index) => {
                         return (

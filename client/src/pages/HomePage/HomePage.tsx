@@ -8,6 +8,7 @@ import { singerAPI } from '../../servicesAPI/SingerService'
 import { trackAPI } from '../../servicesAPI/TrackService'
 import { useAppDispatch } from '../../hooks/redux'
 import { setActiveTracks } from '../../store/reducers/PlayerReducer'
+import Loader from '../../components/Loader/Loader'
 
 const HomePage = () => {
   const dispatch = useAppDispatch()
@@ -44,7 +45,7 @@ const HomePage = () => {
             {
               isLoadingAlbum && isLoadingAlbum ? Array(6)
                   .fill(0)
-                  .map((_, index) => <div key={index}>загружаюсь...</div>)
+                  .map((_, index) => <Loader key={`${_}${index}`} />)
                 :
                 album && album.album.rows.map((album) => {
                   return (
@@ -63,7 +64,7 @@ const HomePage = () => {
             {
               isLoadingTrack && isLoadingTrack ? Array(6)
                   .fill(0)
-                  .map((_, index) => <div key={index}>загружаюсь...</div>)
+                  .map((_, index) => <Loader key={`${_}${index}`} />)
                 :
                 track && track?.track?.rows.map((track, index) => {
                   return (
@@ -92,7 +93,7 @@ const HomePage = () => {
             {
               isLoadingSinger && isLoadingSinger ? Array(6)
                   .fill(0)
-                  .map((_, index) => <div key={index}>загружаюсь...</div>)
+                  .map((_, index) => <Loader key={`${_}${index}`} />)
                 :
                 singer && singer.singer.rows.map((singer) => {
                   return (

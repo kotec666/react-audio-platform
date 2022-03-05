@@ -247,6 +247,9 @@ input {
     justify-content: center;
   }
 
+  .chooseFileBtn, .loadingBtn {
+    &:disabled { background: #cccccc; }
+  }
 
   .inputBlockAlbumTrack, .inputBlockAlbum, .chooseFileBtn {
     margin-left: 25%;

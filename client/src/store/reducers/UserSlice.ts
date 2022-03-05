@@ -9,6 +9,7 @@ import {
   setRefreshCookie
 } from '../../utils/cookie'
 import jwtDecode from 'jwt-decode'
+import { log } from 'util'
 
 
 interface UserState {
@@ -57,16 +58,17 @@ export const userSlice = createSlice({
         builder.addMatcher(
             userAPI.endpoints.loginUser.matchFulfilled,
             (state, { payload }) => {
-                state.accessToken = payload.accessToken
-                state.user = payload.user
-                state.isAuth = true
-                setAccessCookie(`${payload.accessToken}`)
-                setRefreshCookie(`${payload.refreshToken}`)
+                state.accessToken = payload !== null ? payload.accessToken : ''
+                state.user = payload !== null ? payload.user : {id: 0, login: '', email: '', role: '', pseudonym: '', isActivated: false, activationLink: ''}
+                state.isAuth = payload !== null
+              setAccessCookie(`${payload.accessToken}`)
+              setRefreshCookie(`${payload.refreshToken}`)
+              console.log(payload)
             }
         )
       builder.addMatcher(
         userAPI.endpoints.logoutUser.matchFulfilled,
-        (state, { payload }) => {
+        () => {
           removeAccessCookie()
           removeRefreshCookie()
         }
@@ -75,10 +77,11 @@ export const userSlice = createSlice({
         userAPI.endpoints.getUser.matchFulfilled,
         (state, { payload }) => {
           state.accessToken = payload !== null ? payload.accessToken : ''
-          state.user = payload.user
+          state.user = payload.user !== null ? payload.user : {id: 0, login: '', email: '', role: '', pseudonym: '', isActivated: false, activationLink: ''}
           state.isAuth = true
-          setAccessCookie(`${payload.accessToken}`)
-          setRefreshCookie(`${payload.refreshToken}`)
+          setAccessCookie(`${payload.accessToken !== null ? payload.accessToken : ''}`)
+          setRefreshCookie(`${payload.refreshToken !== null ? payload.refreshToken : ''}`)
+          console.log(payload)
         }
       )
         builder.addMatcher(

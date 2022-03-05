@@ -5,6 +5,7 @@ import Pagination from '../../components/Pagination/Pagination'
 import { calculatePagesCount } from '../../hooks/usePagination'
 import { useDebounce } from '../../hooks/useDebounce'
 import { trackAPI } from '../../servicesAPI/TrackService'
+import Loader from '../../components/Loader/Loader'
 
 const AlbumsPage = () => {
   const pageSize = 8
@@ -40,7 +41,7 @@ const AlbumsPage = () => {
           {
             isLoading && isLoading ? Array(6)
                 .fill(0)
-                .map((_, index) => <div key={index}>загружаюсь...</div>)
+                .map((_, index) => <Loader key={`${_}${index}`} />)
               :
             album && album.album.rows.map((album) => {
               return (

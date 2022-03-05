@@ -17,9 +17,10 @@ passport.use(new GoogleStrategy({
       const foundUser = await User.findOne({ where: { email: profile.emails[0].value } })
       if (!foundUser) {
         const userData = await userService.registration(`${profile.displayName}`, `${profile.emails[0].value}${process.env.JWT_ACCESS_SECRET}`, `${profile.emails[0].value}`)
-        done(null, userData, accessToken, refreshToken)
+        done(null, userData.user, { accessToken: userData.accessToken }, { refreshToken: userData.refreshToken })
       } else {
-        done(null, foundUser, accessToken, refreshToken)
+        const userData = await userService.login(`${foundUser.login}`, `${profile.emails[0].value}${process.env.JWT_ACCESS_SECRET}`)
+        done(null, userData.user, { accessToken: userData.accessToken }, { refreshToken: userData.refreshToken })
       }
     } catch (e) {
       console.log(e)
@@ -36,9 +37,10 @@ passport.use(new GithubStrategy({
       const foundUser = await User.findOne({ where: { login: profile.username } })
       if (!foundUser) {
         const userData = await userService.registration(`${profile.username}`, `${profile.username}${process.env.JWT_ACCESS_SECRET}`, `${profile._json.email}`)
-        done(null, userData, accessToken, refreshToken)
+        done(null, userData.user, { accessToken: userData.accessToken }, { refreshToken: userData.refreshToken })
       } else {
-        done(null, foundUser, accessToken, refreshToken)
+        const userData = await userService.login(`${profile.username}`, `${profile.username}${process.env.JWT_ACCESS_SECRET}`)
+        done(null, userData.user, { accessToken: userData.accessToken }, { refreshToken: userData.refreshToken })
       }
     } catch (e) {
       console.log(e)

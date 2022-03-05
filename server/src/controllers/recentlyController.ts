@@ -8,16 +8,18 @@ class RecentlyController {
   async getOne(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId } = req.body
-      const recently = await Recently.findOne(
-        {
-          where: { userId: userId },
-          include: [
-            { model: Track, through: RecentlyTrack } as IncludeThroughOptions
-          ]
-        }
-      )
-
-      return res.json({ recently })
+      if (typeof userId === 'string') {
+        let _userId = parseInt(userId)
+        const recently = await Recently.findOne(
+          {
+            where: { userId: _userId },
+            include: [
+              { model: Track, through: RecentlyTrack } as IncludeThroughOptions
+            ]
+          }
+        )
+        return res.json({ recently })
+      }
     } catch (e) {
       next(e)
     }
@@ -72,8 +74,11 @@ class RecentlyController {
     if(!_userId) {
       return res.json('invalid params')
     } else {
-      const recentlyId = await Recently.findOne({where: {userId: +_userId}})
-      return res.json(recentlyId)
+      if (typeof _userId === 'string') {
+        let userId = parseInt(_userId)
+        const recentlyId = await Recently.findOne({ where: { userId: userId } })
+        return res.json(recentlyId)
+      }
     }
   }
 

@@ -21,24 +21,45 @@ class AlbumService {
 
 
     let albumInfo = JSON.parse(albumTracks)
-    albumInfo.forEach((track: ITrack, i: number) => {
 
+
+    if (albumInfo.length === 1) {
       let fileName = generateName()
 
-      Track.create({
-        name: track.name,
+      await Track.create({
+        name: albumInfo[0].name,
         streams: 0,
         trackAudio: fileName,
         albumId: album.id,
         userId: userId,
-        genreId: track.genreId
+        genreId: albumInfo[0].genreId
       })
 
-      files.trackAudio[i].mv(path.resolve(__dirname, '..', 'static', fileName))
+      await files.trackAudio.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-    })
+      return { album: album }
+    } else {
+      albumInfo.forEach((track: ITrack, i: number) => {
 
-    return { album: album }
+        let fileName = generateName()
+
+        Track.create({
+          name: track.name,
+          streams: 0,
+          trackAudio: fileName,
+          albumId: album.id,
+          userId: userId,
+          genreId: track.genreId
+        })
+
+        files.trackAudio[i].mv(path.resolve(__dirname, '..', 'static', fileName))
+
+      })
+
+      return { album: album }
+    }
+
+
   }
 
   async deleteAlbum(albumId: number, user: any) {

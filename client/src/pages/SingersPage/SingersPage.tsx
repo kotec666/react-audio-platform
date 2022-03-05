@@ -5,6 +5,7 @@ import Pagination from '../../components/Pagination/Pagination'
 import { useDebounce } from '../../hooks/useDebounce'
 import { singerAPI } from '../../servicesAPI/SingerService'
 import { calculatePagesCount } from '../../hooks/usePagination'
+import Loader from '../../components/Loader/Loader'
 
 const SingersPage = () => {
   const pageSize = 8
@@ -39,7 +40,7 @@ const SingersPage = () => {
           {
             isLoading && isLoading ? Array(6)
                 .fill(0)
-                .map((_, index) => <div key={index}>загружаюсь...</div>)
+                .map((_, index) => <Loader key={`${_}${index}`} />)
               :
               singer && singer.singer.rows.map((singer) => {
                 return (
