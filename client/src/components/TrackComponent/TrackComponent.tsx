@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import {
   pauseTrack,
   setCurrIndex,
-  setActiveTrack
+  setActiveTrack,
 } from '../../store/reducers/PlayerReducer'
 import { trackAPI } from '../../servicesAPI/TrackService'
 
@@ -51,7 +51,7 @@ const TrackComponent:React.FC<TrackProps> = ({
           <img src={trackIcon} alt="track" />
         </div>
       </div>
-      <span>{name} id:{id}</span>
+      <span>{name}</span>
     </div>
   )
 }

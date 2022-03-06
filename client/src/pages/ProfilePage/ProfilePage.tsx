@@ -10,6 +10,7 @@ import { clearSinger } from '../../store/reducers/SingerSlice'
 import { applicationAPI } from '../../servicesAPI/ApplicationService'
 import { trackAPI } from '../../servicesAPI/TrackService'
 import Loader from '../../components/Loader/Loader'
+import { setActiveTracks } from '../../store/reducers/PlayerReducer'
 
 
 const ProfilePage = () => {
@@ -46,6 +47,12 @@ const ProfilePage = () => {
 
   const {data: singerInfo, error: SingerError, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: singerId})
   const [sendApplication,  { error: ApplicationError, isLoading: isLoadingApplication  }  ] = applicationAPI.useSendApplicationMutation()
+
+  useEffect(() => {
+    if (singerInfo) {
+      dispatch(setActiveTracks(singerInfo?.singer[0]?.userTracks))
+    }
+  }, [singerInfo])
 
   const submitApplicationHandler = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -374,6 +381,7 @@ const ProfilePage = () => {
                         </div>
                         <div className={s.AlbumsWrapper}>
                           {
+                          SingerError ? 'failed to load singer data' :
                           isLoading && isLoading ? Array(6)
                               .fill(0)
                               .map((_, index) => <Loader key={`${_}${index}`} />)

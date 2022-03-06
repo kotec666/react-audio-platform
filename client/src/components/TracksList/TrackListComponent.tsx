@@ -12,8 +12,9 @@ import { IUserRecentlyTracks } from '../../models/IRecently'
 import { IAlbumTracks } from '../../models/IAlbum'
 import { favoriteTrackRows } from '../../models/IFavoriteTrack'
 import { trackAPI } from '../../servicesAPI/TrackService'
-import { playTrack, setActiveTrack, setActiveTracks, setCurrIndex } from '../../store/reducers/PlayerReducer'
+import { setActiveTrack, setActiveTracks, setCurrIndex } from '../../store/reducers/PlayerReducer'
 import { ITrackData } from '../../models/ITrack'
+import { singerAPI } from '../../servicesAPI/SingerService'
 
 interface TrackListComponentProps {
   row: IUserFavoriteTracks | IUserRecentlyTracks | IAlbumTracks
@@ -37,6 +38,7 @@ const TrackListComponent: React.FC<TrackListComponentProps> = ({
   const { active, pause } = useAppSelector(state => state.playerReducer)
   const { recentlyId } = useAppSelector(state => state.recentlyReducer)
   const { user } = useAppSelector(state => state.userReducer)
+  const {data: singerInfo} = singerAPI.useGetSingerDataByIdQuery({userId: row.userId })
 
   const [deleteTrack] = trackAPI.useDeleteTrackMutation()
   const [addRecently] = trackAPI.useAddRecentlyMutation()
@@ -47,7 +49,6 @@ const TrackListComponent: React.FC<TrackListComponentProps> = ({
 
   const play = async (id: number) => {
     const Track = {id: row.id, name: row.name, userId: row.userId, streams: row.streams, trackAudio: row.trackAudio, genreId: row.genreId, albumId: row.albumId}
-    dispatch(playTrack())
     dispatch(setActiveTrack(Track))
     dispatch(setCurrIndex(index))
     await addRecently({ trackId: id, recentlyId: recentlyId.id }).unwrap()
@@ -61,13 +62,13 @@ const TrackListComponent: React.FC<TrackListComponentProps> = ({
     <div className={s.trackWrapper}>
       <div className={s.trackPlayIconWrapper} onClick={() => play(row.id)}>
         {
-         active && active.id === row.id && pause
+         active && active.id === row.id && !pause
             ? <img src={trackListPause} alt="pauseIcon"/>
             : <img src={trackListPlay} alt="playIcon"/>
         }
       </div>
       <div className={s.trackNameWrapper}>
-        {row.name} - {row.albumId}
+        {row.name} - {singerInfo && singerInfo?.singer[0]?.pseudonym}
       </div>
       <div className={s.trackFavoriteIconWrapper}>
         {

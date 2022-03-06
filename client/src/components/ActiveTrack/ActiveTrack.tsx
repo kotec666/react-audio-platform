@@ -38,7 +38,7 @@ const ActiveTrack = () => {
   const {favoriteId} = useAppSelector(state => state.favoriteReducer)
   const [addFavorite] = trackAPI.useAddFavoriteMutation()
   const [deleteFavorite] = trackAPI.useDeleteFavoriteMutation()
-  const {data: singerInfo, error, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: active ? active.userId : 0})
+  const {data: singerInfo, isLoading} = singerAPI.useGetSingerDataByIdQuery({userId: active ? active.userId : 0})
 
 
   const toPrevTrack = () => {
@@ -81,6 +81,9 @@ const ActiveTrack = () => {
       }
       audio.ontimeupdate = () => {
         dispatch(setCurrentTime(Math.ceil(audio.currentTime)))
+      }
+      audio.onended = () => {
+        toNextTrack()
       }
     }
   }
@@ -148,7 +151,7 @@ const ActiveTrack = () => {
             {active && active.name}
           </div>
           <div className={s.trackGroupNameWrapper}>
-            {isLoading ? active && singerInfo && singerInfo.singer[0].pseudonym : null}
+            {isLoading ? 'loading' : active && singerInfo && singerInfo?.singer[0]?.pseudonym}
           </div>
         </div>
         {

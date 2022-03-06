@@ -137,11 +137,11 @@ const TracksList = () => {
                        : null
             }
           </span>
-          <select>
-            <option value="">По дате</option>
-            <option value="">По прослушиваниям</option>
-            <option value="">В обратном порядке</option>
-          </select>
+          {/*{<select>*/}
+          {/*  <option value="">По дате</option>*/}
+          {/*  <option value="">По прослушиваниям</option>*/}
+          {/*  <option value="">В обратном порядке</option>*/}
+          {/*</select>}*/}
         </div>
       </div>
       <div className={s.contentWrapper}>
