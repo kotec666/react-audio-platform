@@ -2,6 +2,8 @@ import express from 'express'
 const router = express.Router()
 
 
+import conversationRouter from './conversationRouter'
+import messageRouter from './messageRouter'
 import trackRouter from './trackRouter'
 import favoriteTrackRouter from './favoriteTrackRouter'
 import recentlyTrackRouter from './recentlyTrackRouter'
@@ -14,6 +16,8 @@ import userRouter from './userRouter'
 
 
 
+router.use('/conversation', conversationRouter)
+router.use('/message', messageRouter)
 router.use('/track', trackRouter)
 router.use('/favoriteTrack', favoriteTrackRouter)
 router.use('/recentlyTrack', recentlyTrackRouter)

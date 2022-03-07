@@ -67,6 +67,13 @@ class UserValidator {
     ]
   }
 
+  checkGetByUserDataById() {
+    return [
+      param('userId')
+        .notEmpty(),
+    ]
+  }
+
 }
 
 export default new UserValidator()

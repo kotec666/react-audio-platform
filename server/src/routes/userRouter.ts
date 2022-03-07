@@ -83,12 +83,6 @@ router.get(
         expressValidatorMiddleware.handleValidationError,
         userController.refresh
 )
-router.get(
-  '/getAll',
-        // authMiddleware.auth,
-        checkRoleMiddleware.checkRole(['ADMIN']),
-        userController.getUsers
-)
 
 router.get(
   '/getAllByPage',
@@ -103,6 +97,18 @@ router.get(
         UserValidator.checkGetByDataById(),
         expressValidatorMiddleware.handleValidationError,
         userController.getSingerDataBySingerId
+)
+
+router.get(
+  '/getUserDataByUserId/:userId',
+        UserValidator.checkGetByUserDataById(),
+        expressValidatorMiddleware.handleValidationError,
+        userController.getUserDataByUserId
+)
+
+router.get(
+  '/getAll',
+        userController.getUsers
 )
 
 

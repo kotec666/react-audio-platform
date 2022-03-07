@@ -1,10 +1,10 @@
 import { DataTypes, ThroughOptions } from 'sequelize'
 import {
     AlbumInstance,
-    ApplicationInstance,
+    ApplicationInstance, ConversationInstance,
     FavoriteInstance,
     favoriteTrackInstance,
-    GenreInstance,
+    GenreInstance, MessageInstance,
     RecentlyInstance,
     recentlyTrackInstance,
     TokenInstance,
@@ -185,6 +185,49 @@ export const Genre = sequelize.define<GenreInstance>("genre", {
         unique: false
     },
 })
+
+export const Conversation = sequelize.define<ConversationInstance>("conversation", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    },
+    firstMemberId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: false
+    },
+    secondMemberId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: false
+    },
+})
+
+export const Message = sequelize.define<MessageInstance>("message", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    },
+    text: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        unique: false
+    },
+})
+
+
+User.hasMany(Message, {as: 'userMessages'})
+Message.belongsTo(User)
+
+Conversation.hasMany(Message, {as: 'conversationMessages'})
+Message.belongsTo(Conversation)
+
+User.hasMany(Conversation, {as: 'userConversations'})
+Conversation.belongsTo(User)
 
 User.hasOne(Token)
 Token.belongsTo(User)

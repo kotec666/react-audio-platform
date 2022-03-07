@@ -98,8 +98,12 @@ class UserService {
   }
 
   async getAllUsers() {
-    const users = User.findAll()
-    return users
+    try {
+      const users = User.findAll({attributes: ['id', 'login', 'email', 'role', 'pseudonym']})
+      return {user: users}
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   async getAllPerPageAndSearchWord(_limit: number, page: number, search: string) {
@@ -147,6 +151,19 @@ class UserService {
         ]
       })
       return {singer: singer}
+    } catch
+      (e) {
+      console.log(e)
+    }
+  }
+
+  async getUserDataById(userId: number) {
+    try {
+      const user = await User.findAll({
+        where: { id: userId },
+        attributes: ['id', 'login', 'email', 'role', 'pseudonym'],
+      })
+      return {user: user}
     } catch
       (e) {
       console.log(e)

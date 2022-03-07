@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import s from './App.module.scss'
 import { AppRouter } from './components/AppRouter'
 import Navbar from './components/Navbar/Navbar'
@@ -8,6 +8,8 @@ import { getAccessCookie, removeAccessCookie, setAccessCookie } from './utils/co
 import { userAPI } from './servicesAPI/UserService'
 import { setUser } from './store/reducers/UserSlice'
 import { trackAPI } from './servicesAPI/TrackService'
+import ChatOpenBtn from './components/ChatComponent/ChatOpenBtn'
+import ChatComponent from './components/ChatComponent/ChatComponent'
 
 
 function App() {
@@ -49,6 +51,8 @@ function App() {
     }
   }, [accessToken])
 
+  const [displayChat, setDisplayChat] = useState(false)
+
   return (
     <div className={s.App}>
       <div className={s.navBar}>
@@ -64,6 +68,13 @@ function App() {
             </div>
           : null
       }
+      <div className={`${s.chatWrapper} ${displayChat ? `${s.chatWrapperOpened}` : `${s.chatWrapperClosed}` }`}>
+        {
+          displayChat
+          ? <ChatComponent displayChat={displayChat} setDisplayChat={setDisplayChat} />
+          : <ChatOpenBtn displayChat={displayChat} setDisplayChat={setDisplayChat} />
+        }
+      </div>
     </div>
   )
 }

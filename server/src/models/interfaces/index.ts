@@ -64,3 +64,14 @@ export interface GenreInstance extends Model {
   name: string
   code: string
 }
+
+export interface ConversationInstance extends Model {
+  id: number
+  firstMemberId: number
+  secondMemberId: number
+}
+
+export interface MessageInstance extends Model {
+  id: number
+  text: string
+}

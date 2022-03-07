@@ -89,3 +89,35 @@ a, a:active, a:visited, {
   color: #FFFFFF;
   text-decoration: none;
 }
+
+.chatWrapper {
+  position: fixed;
+  bottom: 80px;
+  right: 40px;
+  z-index: 9999;
+  text-align: center;
+}
+
+.chatWrapperClosed {
+  width: 50px;
+  height: 50px;
+  background: #26E07F;
+  border-radius: 20px 0 0 0;
+  line-height: 30px;
+  color: #444;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatWrapperOpened {
+  width: 300px;
+  height: 600px;
+  line-height: 30px;
+  color: #444;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
