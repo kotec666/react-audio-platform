@@ -9,7 +9,6 @@ import {
   setRefreshCookie
 } from '../../utils/cookie'
 import jwtDecode from 'jwt-decode'
-import { log } from 'util'
 
 
 interface UserState {

@@ -5,13 +5,12 @@ import genre from '../../utils/icons/genre.png'
 import { Link } from 'react-router-dom'
 
 interface GenreProps {
-  id: number
   name: string
   code: string
 }
 
 
-const Genre:React.FC<GenreProps> = ({id, name, code}) => {
+const Genre:React.FC<GenreProps> = ({ name, code}) => {
   return (
     <Link to={`${GENRE_ROUTE + `/${code}`}`} className={s.genreResult}>
       <div className={s.genreWrapper}>

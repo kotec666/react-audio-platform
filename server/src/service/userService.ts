@@ -99,7 +99,7 @@ class UserService {
 
   async getAllUsers() {
     try {
-      const users = User.findAll({attributes: ['id', 'login', 'email', 'role', 'pseudonym']})
+      const users = await User.findAll({attributes: ['id', 'login', 'role', 'pseudonym']})
       return {user: users}
     } catch (e) {
       console.log(e)
@@ -159,11 +159,11 @@ class UserService {
 
   async getUserDataById(userId: number) {
     try {
-      const user = await User.findAll({
+      const user = await User.findOne({
         where: { id: userId },
         attributes: ['id', 'login', 'email', 'role', 'pseudonym'],
       })
-      return {user: user}
+      return user
     } catch
       (e) {
       console.log(e)

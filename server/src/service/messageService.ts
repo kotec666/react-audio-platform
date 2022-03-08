@@ -8,7 +8,7 @@ class MessageService {
   }
 
   async getMessagesByConversationId(conversationId: number) {
-    const message = await Message.findAll({ where: { conversationId: conversationId }, order: [['id', 'DESC']] })
+    const message = await Message.findAll({ where: { conversationId: conversationId } })
     return { message: message }
   }
 

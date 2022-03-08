@@ -68,13 +68,17 @@ function App() {
             </div>
           : null
       }
-      <div className={`${s.chatWrapper} ${displayChat ? `${s.chatWrapperOpened}` : `${s.chatWrapperClosed}` }`}>
-        {
-          displayChat
-          ? <ChatComponent displayChat={displayChat} setDisplayChat={setDisplayChat} />
-          : <ChatOpenBtn displayChat={displayChat} setDisplayChat={setDisplayChat} />
-        }
-      </div>
+      {
+        user.id !== 0
+        ? <div className={`${s.chatWrapper} ${displayChat ? `${s.chatWrapperOpened}` : `${s.chatWrapperClosed}` }`}>
+            {
+              displayChat
+                ? <ChatComponent displayChat={displayChat} setDisplayChat={setDisplayChat} />
+                : <ChatOpenBtn displayChat={displayChat} setDisplayChat={setDisplayChat} />
+            }
+          </div>
+        : null
+      }
     </div>
   )
 }

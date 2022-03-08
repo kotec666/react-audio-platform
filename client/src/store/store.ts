@@ -7,10 +7,12 @@ import playerReducer from './reducers/PlayerReducer'
 import favoriteReducer from './reducers/FavoriteSlice'
 import applicationReducer from './reducers/ApplicationSlice'
 import recentlyReducer from './reducers/RecentlySlice'
+import conversationReducer from './reducers/ConversationSlice'
 import { userAPI } from '../servicesAPI/UserService'
 import { singerAPI } from '../servicesAPI/SingerService'
 import { trackAPI } from '../servicesAPI/TrackService'
 import { applicationAPI } from '../servicesAPI/ApplicationService'
+import { conversationAPI } from '../servicesAPI/ConversationService'
 
 const rootReducer = combineReducers({
   userReducer,
@@ -21,10 +23,12 @@ const rootReducer = combineReducers({
   favoriteReducer,
   applicationReducer,
   recentlyReducer,
+  conversationReducer,
   [userAPI.reducerPath]: userAPI.reducer,
   [singerAPI.reducerPath]: singerAPI.reducer,
   [trackAPI.reducerPath]: trackAPI.reducer,
   [applicationAPI.reducerPath]: applicationAPI.reducer,
+  [conversationAPI.reducerPath]: conversationAPI.reducer,
 })
 
 export const setupStore = () => {
@@ -35,6 +39,7 @@ export const setupStore = () => {
       singerAPI.middleware,
       trackAPI.middleware,
       applicationAPI.middleware,
+      conversationAPI.middleware,
     ))
   })
 }

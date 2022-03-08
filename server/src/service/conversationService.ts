@@ -1,5 +1,6 @@
 import { Conversation } from '../models/models'
 import ApiError from '../error/ApiError'
+import { Op } from 'sequelize'
 
 
 class ConversationService {
@@ -15,7 +16,7 @@ class ConversationService {
   }
 
   async getConvByUserId(userId: number) {
-    const conversation = await Conversation.findOne({ where: { userId: userId }, order: [['id', 'DESC']] })
+    const conversation = await Conversation.findAll({where: { [Op.or]: [{ firstMemberId: userId }, { secondMemberId: userId }] }})
     return { conversation: conversation }
   }
 

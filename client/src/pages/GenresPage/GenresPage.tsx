@@ -45,7 +45,7 @@ const AlbumsPage = () => {
               :
               genre && genre.genre.rows.map((genre) => {
                 return (
-                  <Genre key={genre.id} id={genre.id} name={genre.name} code={genre.code}/>
+                  <Genre key={genre.id} name={genre.name} code={genre.code}/>
                 )
               })
           }
