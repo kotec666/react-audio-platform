@@ -15,14 +15,19 @@ const TracksList = () => {
   const location = useLocation()
 
   const { user } = useAppSelector(state => state.userReducer)
-  const [currentPath, setCurrentPath] = useState('')
   const [genreCode, setGenreCode] = useState('')
   const [activeAlbumId, setActiveAlbumId] = useState(0)
+
   const [pagesCount, setPagesCount] = useState(0)
+
   const [albumTracksCount, setAlbumTracksCount] = useState(0)
   const [genreTracksCount, setGenreTracksCount] = useState(0)
+
   const [recentlyTracksCount, setRecentlyTracksCount] = useState(0)
   const [favoriteTracksCount, setFavoriteTracksCount] = useState(0)
+
+  const [activeCurrentPath, setActiveCurrentPath] = useState('')
+  const [activeItem, setActiveItem] = useState({'path': '', 'title': ''})
 
   const pageSize = 14
   const [page, setPage] = useState(1)
@@ -79,7 +84,7 @@ const TracksList = () => {
   useEffect(() => {
     const currentPath = location.pathname.split('/')
     console.log('curPath: ' + currentPath[1])
-    setCurrentPath(currentPath[1])
+    setActiveCurrentPath(currentPath[1])
 
     if (currentPath[1] === FAVORITE_ROUTE.slice(1)) {
       console.log('favorite')
@@ -117,6 +122,35 @@ const TracksList = () => {
     setSearchValue(e.target.value)
   }
 
+  const pageData = [
+    {
+      'path': `${FAVORITE_ROUTE.slice(1)}`,
+      'title': 'Любимые треки:',
+    },
+    {
+      'path': `${RECENTLY_ROUTE.slice(1)}`,
+      'title': `Недавно прослушанные:`,
+    },
+    {
+      'path': `${ALBUM_ROUTE.slice(1)}`,
+      'title': 'Альбом:',
+    },
+    {
+      'path': `${GENRE_ROUTE.slice(1)}`,
+      'title': `${codeGenreTracks?.genre?.rows[0]?.name}:`,
+    },
+  ]
+
+  useEffect(() => {
+    const foundObj = pageData.find(pageItem => pageItem.path == activeCurrentPath)
+
+    if (foundObj) {
+      setActiveItem(foundObj)
+    } else {
+      setActiveItem(pageData[0])
+    }
+  }, [activeCurrentPath, codeGenreTracks])
+
   return (
     <div className={s.pageWrapper}>
       <div className={s.infoWrapper}>
@@ -125,17 +159,7 @@ const TracksList = () => {
         </div>
         <div className={s.actionsWrapper}>
           <span>
-            {
-              currentPath === `${FAVORITE_ROUTE.slice(1)}`
-                ? `Любимые треки:`
-                : currentPath === `${RECENTLY_ROUTE.slice(1)}`
-                   ? `Недавно прослушанные:`
-                   : currentPath === `${ALBUM_ROUTE.slice(1)}`
-                     ? `Альбом:`
-                     : currentPath === `${GENRE_ROUTE.slice(1)}`
-                       ? `${codeGenreTracks?.genre?.rows[0]?.name}:`
-                       : null
-            }
+            {!isLoadingCodeGenreTracks && activeItem?.title}
           </span>
           {/*{<select>*/}
           {/*  <option value="">По дате</option>*/}
@@ -147,7 +171,7 @@ const TracksList = () => {
       <div className={s.contentWrapper}>
         <div className={s.trackListWrapper}>
           {
-            currentPath === `${FAVORITE_ROUTE.slice(1)}`
+            activeCurrentPath === `${FAVORITE_ROUTE.slice(1)}`
               ? isLoadingFavorite && isLoadingFavorite ? Array(6)
                 .fill(0)
                 .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
@@ -169,7 +193,7 @@ const TracksList = () => {
                 )
               )
             })
-              : currentPath === `${RECENTLY_ROUTE.slice(1)}`
+              : activeCurrentPath === `${RECENTLY_ROUTE.slice(1)}`
               ? isLoadingRecently && isLoadingRecently ? Array(6)
                 .fill(0)
                 .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
@@ -191,7 +215,7 @@ const TracksList = () => {
                   )
                 )
               })
-              : currentPath === `${ALBUM_ROUTE.slice(1)}`
+              : activeCurrentPath === `${ALBUM_ROUTE.slice(1)}`
                 ? isLoadingAlbumTracks && isLoadingAlbumTracks ? Array(6)
                     .fill(0)
                     .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
@@ -213,7 +237,7 @@ const TracksList = () => {
                     )
                   )
                 })
-                : currentPath === `${GENRE_ROUTE.slice(1)}`
+                : activeCurrentPath === `${GENRE_ROUTE.slice(1)}`
                 ? isLoadingCodeGenreTracks && isLoadingCodeGenreTracks ? Array(6)
                    .fill(0)
                    .map((_, index) => <RecentlyAndFavoriteLoader key={`${_}${index}`} />)
