@@ -6,6 +6,8 @@ import { getAccessCookie } from '../utils/cookie'
 import { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { clearUser, tokenReceived } from '../store/reducers/UserSlice'
 
+console.log(process.env.REACT_APP_API_URL)
+
 const baseQuery = fetchBaseQuery({baseUrl: `${process.env.REACT_APP_API_URL}/api`, prepareHeaders(headers) {return headers}, credentials: 'include'})
 export const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
