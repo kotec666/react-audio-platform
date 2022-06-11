@@ -16,7 +16,7 @@ require('dotenv').config({ path: __dirname+'./../.env' })
 const app:Application = express()
 const PORT = process.env.PORT || 5000
 
-
+app.set('view engine', 'pug')
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(express.json())
 app.use(cookieParser())
@@ -36,6 +36,11 @@ app.use(cors({
 }))
 app.use(fileUpload({}))
 app.use('/api', router)
+
+app.set('views', './src/views')
+app.get('*', function (req, res) {
+  res.render('index', { title: 'Hey', js: '/assets/bundle.js', css: '/assets/bundle.css' })
+})
 
 
 // Обработка ошибок, последний Middleware
