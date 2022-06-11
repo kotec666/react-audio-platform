@@ -44,7 +44,7 @@ app.get('*', function (req, res) {
 
 
 // Обработка ошибок, последний Middleware
-app.use(errorHandler.errorHandling)
+// app.use(errorHandler.errorHandling)
 
 async function start() {
   try {
