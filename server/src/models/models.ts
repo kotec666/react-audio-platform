@@ -29,7 +29,7 @@ export const Token = sequelize.define<TokenInstance>("token", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 
@@ -76,7 +76,7 @@ export const User = sequelize.define<UserInstance>("user", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 export const Application = sequelize.define<ApplicationInstance>("application", {
@@ -95,7 +95,7 @@ export const Application = sequelize.define<ApplicationInstance>("application", 
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 export const Recently = sequelize.define<RecentlyInstance>("recently", {
@@ -108,7 +108,7 @@ export const Recently = sequelize.define<RecentlyInstance>("recently", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 export const Favorite = sequelize.define<FavoriteInstance>("favorite", {
     id: {
@@ -120,7 +120,7 @@ export const Favorite = sequelize.define<FavoriteInstance>("favorite", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 export const RecentlyTrack = sequelize.define<recentlyTrackInstance>("recently_track", {
@@ -133,7 +133,7 @@ export const RecentlyTrack = sequelize.define<recentlyTrackInstance>("recently_t
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 export const FavoriteTrack = sequelize.define<favoriteTrackInstance>("favorite_track", {
@@ -146,7 +146,7 @@ export const FavoriteTrack = sequelize.define<favoriteTrackInstance>("favorite_t
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 export const Track = sequelize.define<TrackInstance>("track", {
@@ -173,7 +173,7 @@ export const Track = sequelize.define<TrackInstance>("track", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 export const Album = sequelize.define<AlbumInstance>("album", {
@@ -191,7 +191,7 @@ export const Album = sequelize.define<AlbumInstance>("album", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 export const Genre = sequelize.define<GenreInstance>("genre", {
@@ -214,7 +214,7 @@ export const Genre = sequelize.define<GenreInstance>("genre", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 export const Conversation = sequelize.define<ConversationInstance>("conversation", {
     id: {
@@ -236,7 +236,7 @@ export const Conversation = sequelize.define<ConversationInstance>("conversation
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 export const Message = sequelize.define<MessageInstance>("message", {
     id: {
@@ -253,7 +253,7 @@ export const Message = sequelize.define<MessageInstance>("message", {
 },
   {
       charset: 'utf8mb4',
-      collate: 'utf8_unicode_ci'
+      collate: 'utf8mb4_unicode_ci'
   })
 
 User.hasMany(Message, {as: 'userMessages'})
