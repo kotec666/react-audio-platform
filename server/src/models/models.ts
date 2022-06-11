@@ -25,8 +25,12 @@ export const Token = sequelize.define<TokenInstance>("token", {
         type: DataTypes.TEXT,
         allowNull: false,
         unique: false
-    },
-})
+    }
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 
 export const User = sequelize.define<UserInstance>("user", {
@@ -69,9 +73,11 @@ export const User = sequelize.define<UserInstance>("user", {
     activationLink: {
         type: DataTypes.STRING,
     }
-})
-
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 export const Application = sequelize.define<ApplicationInstance>("application", {
     id: {
@@ -86,8 +92,11 @@ export const Application = sequelize.define<ApplicationInstance>("application", 
         allowNull: false,
         unique: true
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 export const Recently = sequelize.define<RecentlyInstance>("recently", {
     id: {
@@ -96,9 +105,11 @@ export const Recently = sequelize.define<RecentlyInstance>("recently", {
         autoIncrement: true,
         allowNull: false,
     },
-})
-
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 export const Favorite = sequelize.define<FavoriteInstance>("favorite", {
     id: {
         type: DataTypes.INTEGER,
@@ -106,8 +117,11 @@ export const Favorite = sequelize.define<FavoriteInstance>("favorite", {
         autoIncrement: true,
         allowNull: false,
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 export const RecentlyTrack = sequelize.define<recentlyTrackInstance>("recently_track", {
     id: {
@@ -116,7 +130,11 @@ export const RecentlyTrack = sequelize.define<recentlyTrackInstance>("recently_t
         autoIncrement: true,
         allowNull: false,
     },
-})
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 export const FavoriteTrack = sequelize.define<favoriteTrackInstance>("favorite_track", {
     id: {
@@ -125,8 +143,11 @@ export const FavoriteTrack = sequelize.define<favoriteTrackInstance>("favorite_t
         autoIncrement: true,
         allowNull: false,
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 export const Track = sequelize.define<TrackInstance>("track", {
     id: {
@@ -149,8 +170,11 @@ export const Track = sequelize.define<TrackInstance>("track", {
         allowNull: false,
         unique: true
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 export const Album = sequelize.define<AlbumInstance>("album", {
     id: {
@@ -164,8 +188,11 @@ export const Album = sequelize.define<AlbumInstance>("album", {
         allowNull: false,
         unique: false
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 export const Genre = sequelize.define<GenreInstance>("genre", {
     id: {
@@ -184,8 +211,11 @@ export const Genre = sequelize.define<GenreInstance>("genre", {
         allowNull: false,
         unique: false
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 export const Conversation = sequelize.define<ConversationInstance>("conversation", {
     id: {
         type: DataTypes.INTEGER,
@@ -203,8 +233,11 @@ export const Conversation = sequelize.define<ConversationInstance>("conversation
         allowNull: false,
         unique: false
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 export const Message = sequelize.define<MessageInstance>("message", {
     id: {
         type: DataTypes.INTEGER,
@@ -217,8 +250,11 @@ export const Message = sequelize.define<MessageInstance>("message", {
         allowNull: false,
         unique: false
     },
-})
-
+},
+  {
+      charset: 'utf8mb4',
+      collate: 'utf8_unicode_ci'
+  })
 
 User.hasMany(Message, {as: 'userMessages'})
 Message.belongsTo(User)

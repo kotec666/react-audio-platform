@@ -11,7 +11,11 @@ const dbPassword = `${process.env.DB_PASS}`
 
 const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
     host: dbHost,
-    dialect: 'mysql'
+    dialect: 'mysql',
+    define: {
+        charset: 'utf8mb4',
+        collate: 'utf8_general_ci',
+    },
 })
 
 export default sequelize
