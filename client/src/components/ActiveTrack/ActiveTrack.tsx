@@ -74,6 +74,7 @@ const ActiveTrack = () => {
 
   const setAudio = () => {
     if (active) {
+      console.log(`${process.env.REACT_APP_API_URL}` + active.trackAudio)
       audio.src = `${process.env.REACT_APP_API_URL}` + active.trackAudio
       audio.volume = volume / 100
       audio.onloadedmetadata = () => {
