@@ -74,7 +74,7 @@ const ActiveTrack = () => {
 
   const setAudio = () => {
     if (active) {
-      audio.src = 'http://localhost:5000/' + active.trackAudio
+      audio.src = `${process.env.REACT_APP_API_URL}` + active.trackAudio
       audio.volume = volume / 100
       audio.onloadedmetadata = () => {
         dispatch(setDuration(Math.ceil(audio.duration)))
